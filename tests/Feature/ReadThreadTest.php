@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Channel;
 use App\Reply;
 use App\Thread;
 use Tests\TestCase;
@@ -53,5 +54,22 @@ class ReadThreadTest extends TestCase
         $reply = create(Reply::class,['thread_id' => $this->thread->id]);
         $this->get($this->thread->path())
             ->assertSee($reply->body);
+    }
+    
+    /**
+     * A User can Filter Threads According to a Tag
+     *
+     * @test
+     * @return void
+     */
+    public function aUserCanFilterThreadsAccordingToATag()
+    {
+        $channel = create(Channel::class);
+        $threadInChannel = create(Thread::class, ['channel_id' => $channel->id]);
+        $threadNotInChannel = create(Thread::class);
+
+        $this->get(route('channel.index', $channel->slug))
+            ->assertSee($threadInChannel)
+            ->assertDontSee($threadNotInChannel);
     }
 }
