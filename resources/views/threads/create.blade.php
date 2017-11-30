@@ -11,20 +11,47 @@
                         <form action="{{ route('threads.store') }}" method="post">
                             {{ csrf_field() }}
     
+                            {{-- Channel Id --}}
+                            <div class="form-group">
+                                <label for="channel_id">Channel Id</label>
+                                <select id="channel_id" name="channel_id" class="form-control" required>
+                                    <option value="">Choose One ...</option>
+                                    @foreach(App\Channel::all() as $channel)
+                                        <option value="{{ $channel->id }}"
+                                                {{ old('channel_id') == $channel->id ? 'selected' : '' }}>
+                                            {{ $channel->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+    
+    
                             {{-- Title --}}
                             <div class="form-group">
                                 <label for="title">Title</label>
-                                <input id="title" name="title" type="text" class="form-control" placeholder="Title">
+                                <input id="title" name="title" type="text" class="form-control" placeholder="Title" value="{{ old('title') }}" required>
                             </div>
     
                             {{-- Body --}}
                             <div class="form-group">
                                 <label for="body">Body</label>
-                                <textarea id="body" name="body" class="form-control" placeholder="Body" rows="8" style="overflow:hidden"></textarea>
+                                <textarea id="body" name="body" class="form-control" placeholder="Body" rows="8" style="overflow:hidden" required>{{ old('body') }}</textarea>
                             </div>
                             
-                            <button type="submit" class="btn btn-primary">Publish</button>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary"> Publish </button>
+                            </div>
+    
+                            @if(count($errors))
+                                <ul class="alert alert-danger">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            @endif
                         </form>
+                        
+                        
                     </div>
                 </div>
             </div>
