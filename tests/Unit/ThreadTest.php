@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Channel;
 use App\Thread;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -29,6 +30,31 @@ class ThreadTest extends TestCase
         parent::setUp();
         $this->_thread = create(Thread::class);
     }
+    
+    /**
+     * A Thread can make a String Path
+     *
+     * @test
+     * @return void
+     */
+    public function aThreadCanMakeAStringPath()
+    {
+        $thread = make(Thread::class);
+        $this->assertEquals(
+            "/threads/{$thread->channel->slug}/{$thread->id}",
+            $thread->path());
+    }
+
+    /**
+     * A Thread Has a Creator
+     *
+     * @test
+     * @return void
+     */
+    public function aThreadHasACreator()
+    {
+        $this->assertInstanceOf(User::class, $this->_thread->creator);
+    }
 
     /**
      * A Thread Has Replies
@@ -40,18 +66,8 @@ class ThreadTest extends TestCase
     {
         $this->assertInstanceOf(Collection::class, $this->_thread->replies);
     }
-    
-    /**
-     * A Thread Has a Creator
-     *
-     * @test
-     * @return void
-     */
-    public function aThreadHasACreator()
-    {
-        $this->assertInstanceOf(User::class, $this->_thread->creator);
-    }
-    
+
+
     /**
      * A Thread Can Add A Reply
      *
@@ -66,5 +82,18 @@ class ThreadTest extends TestCase
         ]);
 
         $this->assertCount(1, $this->_thread->replies);
+    }
+    
+    /**
+     * A Thread Belongs to a Channel
+     *
+     * @test
+     * @return void
+     */
+    public function aThreadBelongsToAChannel()
+    {
+        $thread = make(Thread::class);
+
+        $this->assertInstanceOf(Channel::class, $thread->channel);
     }
 }

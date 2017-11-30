@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Thread;
-use function auth;
 use Illuminate\Http\Request;
-use function redirect;
-use function view;
 
 class ThreadsController extends Controller
 {
@@ -14,7 +11,6 @@ class ThreadsController extends Controller
     {
         $this->middleware('auth')->except(['index', 'show']);
     }
-
 
     /**
      * Display a listing of the resource.
@@ -46,9 +42,10 @@ class ThreadsController extends Controller
     public function store(Request $request)
     {
         $thread = new Thread([
-            'user_id' => auth()->id(),
-            'title' => request('title'),
-            'body' => request('body')
+            'user_id'    => auth()->id(),
+            'channel_id' => request('channel_id'),
+            'title'      => request('title'),
+            'body'       => request('body')
         ]);
 
         $thread->save();
