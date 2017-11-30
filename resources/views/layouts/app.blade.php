@@ -36,8 +36,21 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li>
-                            <a href="{{ route('threads.index') }}">All Threads</a>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                Browse <span class="caret"></span></a>
+        
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ route('threads.index') }}">All Threads</a>
+                                </li>
+                                
+                                @if(auth()->check())
+                                    <li>
+                                        <a href="{{ route('threads.index', ['by' => auth()->user()->name]) }}">My Threads</a>
+                                    </li>
+                                @endif
+                            </ul>
                         </li>
     
                         <li>
