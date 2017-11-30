@@ -57,19 +57,19 @@ class ReadThreadTest extends TestCase
     }
     
     /**
-     * A User can Filter Threads According to a Tag
+     * A User can Filter Threads According to a Channel
      *
      * @test
      * @return void
      */
-    public function aUserCanFilterThreadsAccordingToATag()
+    public function aUserCanFilterThreadsAccordingToAChannel()
     {
         $channel = create(Channel::class);
         $threadInChannel = create(Thread::class, ['channel_id' => $channel->id]);
         $threadNotInChannel = create(Thread::class);
 
         $this->get(route('channel.index', $channel->slug))
-            ->assertSee($threadInChannel)
-            ->assertDontSee($threadNotInChannel);
+            ->assertSee($threadInChannel->title)
+            ->assertDontSee($threadNotInChannel->title);
     }
 }

@@ -24,9 +24,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('threads', 'ThreadsController@index')
     ->name('threads.index');
 
-Route::get('threads/{channel}', 'ThreadsController@index')
-    ->name('channels.index');
-
 Route::get('threads/create', 'ThreadsController@create')
     ->name('threads.create');
 
@@ -35,6 +32,9 @@ Route::get('threads/{channel}/{thread}', 'ThreadsController@show')
 
 Route::post('threads', 'ThreadsController@store')
     ->name('threads.store');
+
+Route::get('threads/{channel}', 'ThreadsController@index')
+    ->name('channel.index');
 
 Route::post('threads/{channel}/{thread}/replies', 'RepliesController@store')
     ->name('replies.store');
