@@ -21,9 +21,13 @@ class ParticipateInForumTest extends TestCase
      */
     public function unauthenticatedUsersMayNotAddReplies()
     {
-        $this->expectException(AuthenticationException::class);
+        $thread = create(Thread::class);
 
-        $this->post('threads/1/replies', []);
+        $reply = make(Reply::class);
+
+        $this->withExceptionHandling()
+            ->post($thread->path() . '/replies', $reply->toArray())
+            ->assertRedirect('login');
     }
     
     /**

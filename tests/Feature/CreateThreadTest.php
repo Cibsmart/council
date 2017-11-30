@@ -24,10 +24,10 @@ class CreateThreadTest extends TestCase
         $this->withExceptionHandling();
 
         $this->get(route('threads.create'))
-            ->assertSee('/login');
+            ->assertRedirect('/login');
 
         $this->post(route('threads.store'))
-            ->assertSee('/login');
+            ->assertRedirect('/login');
     }
 
     /**
@@ -40,11 +40,11 @@ class CreateThreadTest extends TestCase
     {
         $this->signIn();
 
-        $thread = make(Thread::class);
+        $thread = create(Thread::class);
 
         $this->post(route('threads.store'), $thread->toArray());
 
-        $this->get(route('threads.show', $thread))
+        $this->get($thread->path())
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }

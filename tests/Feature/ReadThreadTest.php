@@ -38,7 +38,7 @@ class ReadThreadTest extends TestCase
      */
     public function aUserCanReadASingleThread()
     {
-        $this->get('threads/' . $this->thread->id)
+        $this->get($this->thread->path())
             ->assertSee($this->thread->title);
     }
 
@@ -51,7 +51,7 @@ class ReadThreadTest extends TestCase
     public function aUserCanReadRepliesThatAreAssociatedWithAThread()
     {
         $reply = create(Reply::class,['thread_id' => $this->thread->id]);
-        $this->get('threads/' . $this->thread->id)
+        $this->get($this->thread->path())
             ->assertSee($reply->body);
     }
 }

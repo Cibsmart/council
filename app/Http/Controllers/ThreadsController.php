@@ -50,7 +50,7 @@ class ThreadsController extends Controller
 
         $thread->save();
 
-        return redirect(route('threads.show', $thread));
+        return redirect($thread->path());
     }
 
     /**
@@ -59,7 +59,7 @@ class ThreadsController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function show(Thread $thread)
+    public function show($channel_id, Thread $thread)
     {
         return view('threads.show', compact('thread'));
     }
