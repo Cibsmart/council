@@ -56,6 +56,10 @@
                                         <a href="{{ route('threads.index', ['by' => auth()->user()->name]) }}">My Threads</a>
                                     </li>
                                 @endif
+    
+                                <li>
+                                    <a href="{{ route('threads.index', ['popular' => 1]) }}">Popular</a>
+                                </li>
                             </ul>
                         </li>
     
