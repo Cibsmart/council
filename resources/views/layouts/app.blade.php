@@ -7,13 +7,19 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <style>
+        body{ padding-bottom: 10px}
+        .level { display: flex; align-items: center; }
+        .flex {flex: 1}
+    </style>
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body style="padding-bottom: 100px">
+<body >
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
