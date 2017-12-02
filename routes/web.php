@@ -11,6 +11,7 @@
 |
 */
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -38,3 +39,6 @@ Route::get('threads/{channel}', 'ThreadsController@index')
 
 Route::post('threads/{channel}/{thread}/replies', 'RepliesController@store')
     ->name('replies.store');
+
+Route::post('replies/{reply}/favourites', 'FavouritesController@store')
+    ->name('favourites.store');
