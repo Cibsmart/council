@@ -2,6 +2,7 @@
 
 namespace App;
 
+use function auth;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -48,5 +49,10 @@ class Reply extends Model
         if (!$this->favourites()->where($attributes)->exists()) {
             $this->favourites()->create($attributes);
         }
+    }
+
+    public function isFavourited()
+    {
+        return $this->favourites()->where('user_id', auth()->id())->exists();
     }
 }
