@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Channel;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,7 +18,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('*', function ($view) {
-            $view->with('channels', Channel::all());
+            $channel = Cache::rememberForever('channels', function () {
+                return Channel::all();
+            });
+            $view->with('channels', $channel);
         });
     }
 

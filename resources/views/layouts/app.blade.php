@@ -53,7 +53,7 @@
                                 
                                 @if(auth()->check())
                                     <li>
-                                        <a href="{{ route('threads.index', ['by' => auth()->user()->name]) }}">My Threads</a>
+                                        <a href="{{ route('threads.index', ['by' => auth()->user()->name ]) }}">My Threads</a>
                                     </li>
                                 @endif
     
