@@ -3,7 +3,7 @@
         <div class="level">
             
             <h5 class="flex">
-                <a href="#"> {{ $reply->owner->name }} </a>
+                <a href="{{ route('profiles.show', $reply->owner) }}"> {{ $reply->owner->name }} </a>
                 said
                 {{ $reply->created_at->diffforhumans() }} ...
             </h5>
