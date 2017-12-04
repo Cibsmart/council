@@ -7,7 +7,9 @@
                 <div class="page-header">
                     <h1>
                         {{ $profileUser->name }}
-                        <small>Since {{ $profileUser->created_at->diffForHumans() }}</small>
+                        <small>
+                            Since {{ $profileUser->created_at->diffForHumans() }}
+                        </small>
                     </h1>
                 </div>
                 
@@ -19,8 +21,10 @@
                                     <a href="{{ route('profiles.show', $thread->creator) }}">
                                         {{ $thread->creator->name }}
                                     </a>
-                                    posted
-                                    {{ $thread->title }}
+                                    posted:
+                                    <a href="{{ $thread->path() }}">
+                                        {{ $thread->title }}
+                                    </a>
                                 </span>
                                 
                                 <span>{{ $thread->created_at->diffForHumans() }}</span>

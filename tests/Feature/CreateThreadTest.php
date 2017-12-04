@@ -92,33 +92,37 @@ class CreateThreadTest extends TestCase
     }
 
     /**
-     * Guest Cannot Delete Threads
+     * Unauthorized Users May Not Delete Threads
      *
      * @test
      * @return void
      */
-    public function guestCannotDeleteThreads()
+    public function unauthorizedUsersMayNotDeleteThreads()
     {
         $this->withExceptionHandling();
 
         $thread = create(Thread::class);
 
-        $response = $this->delete($thread->path());
+        $this->delete($thread->path())
+            ->assertRedirect('login');
 
-        $response->assertRedirect('login');
+        $this->signIn();
+
+        $this->delete($thread->path())
+            ->assertStatus(403);
     }
     
     /**
-     * A Thread can be Deleted
+     * Authorized Users Can Delete Threads
      *
      * @test
      * @return void
      */
-    public function aThreadCanBeDeleted()
+    public function authorizedUsersCanDeleteThreads()
     {
         $this->signIn();
 
-        $thread = create(Thread::class);
+        $thread = create(Thread::class, ['user_id' => auth()->id()]);
 
         $reply = create(Reply::class, ['thread_id' => $thread->id]);
 
@@ -130,17 +134,6 @@ class CreateThreadTest extends TestCase
             ->assertDatabaseMissing('replies', ['id' => $reply->id]);
     }
     
-    /**
-     * Threads May Only be Deleted by those who have Permission
-     *
-     * @test
-     * @return void
-     */
-    public function threadsMayOnlyBeDeletedByThoseWhoHavePermission()
-    {
-        //TODO
-    }
-
     public function publishThread($overrides = [])
     {
         $this->withExceptionHandling()
