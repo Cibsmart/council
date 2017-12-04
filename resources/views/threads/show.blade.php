@@ -6,11 +6,22 @@
             <div class="col-md-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <a href="{{ route('profiles.show', $thread->creator) }}">
-                            {{ $thread->creator->name }}
-                        </a>
-                        posted
-                        {{ $thread->title }}
+                        <div class="level">
+                            <span class="flex">
+                                <a href="{{ route('profiles.show', $thread->creator) }}">
+                                    {{ $thread->creator->name }}
+                                </a>
+                                posted
+                                {{ $thread->title }}
+                            </span>
+                            @if(Auth::check())
+                                <form action="{{ $thread->path() }}" method="post">
+                                    {{ csrf_field() }} {{ method_field('DELETE') }}
+                                    
+                                    <button type="submit" class="btn btn-link">Delete</button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                     
                     <div class="panel-body">
@@ -30,12 +41,14 @@
                     <form action="{{ $thread->path() . '/replies' }}" method="post">
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <textarea name="body" id="body" class="form-control" placeholder="Have Something to Say" rows="5"></textarea>
+                            <textarea name="body" id="body" class="form-control" placeholder="Have Something to Say"
+                                      rows="5"></textarea>
                         </div>
                         <button class="btn btn-default">Post</button>
                     </form>
                 @else
-                    <p class="text-center">Please <a href="{{ route('login') }}">Sign in</a> to participate in this discussion</p>
+                    <p class="text-center">Please <a href="{{ route('login') }}">Sign in</a> to participate in this
+                        discussion</p>
                 @endif
             </div>
             

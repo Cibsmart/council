@@ -7,6 +7,8 @@ use App\Filters\ThreadFilters;
 use App\Thread;
 use App\User;
 use Illuminate\Http\Request;
+use function redirect;
+use function response;
 
 class ThreadsController extends Controller
 {
@@ -73,7 +75,7 @@ class ThreadsController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function show($channel_id, Thread $thread)
+    public function show($channel, Thread $thread)
     {
         $replies = $thread->replies()->paginate(20);
         return view('threads.show', compact('thread', 'replies'));
@@ -106,11 +108,17 @@ class ThreadsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Thread  $thread
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      */
-    public function destroy(Thread $thread)
+    public function destroy($channel, Thread $thread)
     {
-        //
+        $thread->delete();
+
+        if(request()->wantsJson()){
+            return response([], 204);
+        }
+
+        return redirect(route('threads.index'));
     }
 
     /**
