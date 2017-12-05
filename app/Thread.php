@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use ReflectionClass;
 
 /**
  * App\Thread
@@ -14,10 +15,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $updated_at
  * @property mixed          $channel
  * @property int            $reply_count
- * @property int $user_id
- * @property int $channel_id
- * @property string $title
- * @property string $body
+ * @property int            $user_id
+ * @property int            $channel_id
+ * @property string         $title
+ * @property string         $body
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread filter($filters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
@@ -28,9 +29,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereUserId($value)
  * @mixin \Eloquent
  */
-
 class Thread extends Model
 {
+    use RecordActivity;
+
     protected $guarded = [];
 
     protected $with = ['creator', 'channel'];
@@ -39,15 +41,15 @@ class Thread extends Model
     {
         parent::boot();
 
-        static::addGlobalScope('replyCount', function ($builder){
+        static::addGlobalScope('replyCount', function ($builder) {
             $builder->withCount('replies');
         });
 
-        static::deleting(function ($thread){
-           $thread->replies()->delete();
+        static::deleting(function ($thread) {
+            $thread->replies()->delete();
         });
-    }
 
+    }
 
     public function path()
     {
@@ -83,4 +85,6 @@ class Thread extends Model
     {
         return $filters->apply($query);
     }
+
+
 }
