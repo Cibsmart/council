@@ -11,9 +11,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int            $id
  * @property \Carbon\Carbon $updated_at
  * @property mixed          $owner
- * @property int $thread_id
- * @property int $user_id
- * @property string $body
+ * @property int            $thread_id
+ * @property int            $user_id
+ * @property string         $body
+ * @property mixed          $thread
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereId($value)
@@ -39,6 +40,11 @@ class Reply extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function thread()
+    {
+        return $this->belongsTo(Thread::class);
     }
 
 }
