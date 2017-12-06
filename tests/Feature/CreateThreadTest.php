@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Activity;
 use App\Channel;
 use App\Reply;
 use App\Thread;
 use App\User;
 use function create;
+use function get_class;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -132,6 +134,18 @@ class CreateThreadTest extends TestCase
 
         $this->assertDatabaseMissing('threads', ['id' => $thread->id ])
             ->assertDatabaseMissing('replies', ['id' => $reply->id]);
+
+        $this->assertEquals(0, Activity::count());
+
+        //Alternative to the above line is be the two assertions below
+//        $this->assertDatabaseMissing('activities', [
+//                'subject_id' => $thread->id,
+//                'subject_type' => get_class($thread)
+//            ])
+//            ->assertDatabaseMissing('activities', [
+//                'subject_id' => $reply->id,
+//                'subject_type' => get_class($reply)
+//            ]);
     }
     
     public function publishThread($overrides = [])
