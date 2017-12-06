@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Thread;
 use App\User;
+use function auth;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -33,11 +34,11 @@ class ProfilesTest extends TestCase
      */
     public function profilesDisplayAllThreadsCreatedByTheAssociatedUser()
     {
-        $user = create(User::class);
+        $this->signIn();
 
-        $thread = create(Thread::class, ['user_id' => $user->id]);
+        $thread = create(Thread::class, ['user_id' => auth()->id()]);
 
-        $this->get(route('profiles.show', $user->name))
+        $this->get(route('profiles.show', auth()->user()->name ))
             ->assertSee($thread->title)
             ->assertSee(($thread->body));
     }
