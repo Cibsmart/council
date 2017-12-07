@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Reply;
 use App\Thread;
+use function auth;
+use function back;
 use function redirect;
+use function response;
 
 class RepliesController extends Controller
 {
@@ -14,15 +18,22 @@ class RepliesController extends Controller
 
     public function store($channelId, Thread $thread)
     {
-        $this->validate(request(), [
-            'body' => 'required'
-        ]);
+        $this->validate(request(), [ 'body' => 'required']);
+
         $thread->addReply([
             'body'    => request('body'),
             'user_id' => auth()->id()
         ]);
 
-        return back()
-            ->with('flash', 'Your reply has been left');
+        return back()->with('flash', 'Your reply has been left');
+    }
+
+    public function destroy(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+
+        $reply->delete();
+
+        return back();
     }
 }

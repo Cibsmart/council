@@ -44,6 +44,9 @@ Route::get('threads/{channel}', 'ThreadsController@index')
 Route::post('threads/{channel}/{thread}/replies', 'RepliesController@store')
     ->name('replies.store');
 
+Route::delete('replies/{reply}', 'RepliesController@destroy')
+    ->name('replies.delete');
+
 Route::post('replies/{reply}/favourites', 'FavouritesController@store')
     ->name('favourites.store');
 
