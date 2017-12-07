@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->environment() !== 'production') {
             $this->app->register(IdeHelperServiceProvider::class);
-            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+//            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
         }
     }
 }

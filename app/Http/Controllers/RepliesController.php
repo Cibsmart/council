@@ -7,6 +7,7 @@ use App\Thread;
 use function auth;
 use function back;
 use function redirect;
+use function request;
 use function response;
 
 class RepliesController extends Controller
@@ -26,6 +27,13 @@ class RepliesController extends Controller
         ]);
 
         return back()->with('flash', 'Your reply has been left');
+    }
+
+    public function update(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+
+        $reply->update(request(['body']));
     }
 
     public function destroy(Reply $reply)

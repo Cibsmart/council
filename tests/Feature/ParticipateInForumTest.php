@@ -8,6 +8,7 @@ use App\User;
 use function auth;
 use function create;
 use Illuminate\Auth\AuthenticationException;
+use function route;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -107,5 +108,48 @@ class ParticipateInForumTest extends TestCase
 
        $this->assertDatabaseMissing('replies', $reply->toArray());
 
+    }
+
+    /**
+     * Unauthorized Users Cannot Update Replies
+     *
+     * @test
+     * @return void
+     */
+    public function unauthorizedUsersCannotUpdateReplies()
+    {
+        $this->withExceptionHandling();
+
+        $reply = create(Reply::class);
+
+        $this->patch(route('replies.update', $reply))
+            ->assertRedirect('login');
+
+        $this->signIn()
+            ->patch(route('replies.update', $reply))
+            ->assertStatus(403);
+    }
+
+    /**
+     * Authorized Users can Update Replies
+     *
+     * @test
+     * @return void
+     */
+    public function authorizedUsersCanUpdateReplies()
+    {
+        $this->signIn();
+
+        $reply = create(Reply::class, ['user_id' => auth()->id()]);
+
+        $reply->body = $replyUpdate = 'You Have Been Changed';
+
+        $this->patch( "replies/{$reply->id}",
+            ['body' => $replyUpdate]);
+
+        $this->assertDatabaseHas('replies', [
+            'id' => $reply->id,
+            'body' => $replyUpdate
+        ]);
     }
 }
