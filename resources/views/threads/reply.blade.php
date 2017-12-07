@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <reply :attributes="{{ $reply }}" inline-template v-cloak>
     <div id="reply-{{ $reply->id }}" class="panel panel-default">
         <div class="panel-heading">
@@ -10,13 +11,7 @@
                 </h5>
                 
                 <div>
-                    <form action="{{ route('favourites.store', $reply) }}" method="post">
-                        {{ csrf_field() }}
-                        
-                        <button type="submit" class="btn btn-default" {{ $reply->isFavourited() ? 'disabled' : '' }}>
-                            {{ $reply->favourites_count }} {{ str_plural('favourite', $reply->favourites_count) }}
-                        </button>
-                    </form>
+                    <favourite :reply="{{ $reply }}"></favourite>
                 </div>
             </div>
         </div>

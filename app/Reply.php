@@ -33,6 +33,8 @@ class Reply extends Model
 
     protected $with = ['owner', 'favourites'];
 
+    protected $appends = ['favouritesCount', 'isFavourited'];
+
     public function path()
     {
 //        return route('favourites.store', $this->id);

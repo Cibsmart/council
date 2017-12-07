@@ -42,6 +42,25 @@ class FavouritesTest extends TestCase
     }
 
     /**
+     * An Authenticated User can Unfavourite Any Reply
+     *
+     * @test
+     * @return void
+     */
+    public function anAuthenticatedUserCanUnfavouriteAnyReply()
+    {
+        $this->signIn();
+
+        $reply = create(Reply::class);
+
+        $reply->favourite();
+
+        $this->delete(route('favourites.delete', $reply));
+        $this->assertCount(0, $reply->favourites);
+
+    }
+
+    /**
      * An Authenticated User May Only Favourite a Reply Once
      *
      * @test
