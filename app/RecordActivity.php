@@ -62,7 +62,6 @@ trait RecordActivity
      */
     protected function getActivityType($event)
     {
-
         $type = strtolower((new ReflectionClass($this))->getShortName());
 
         return $event . '_' . $type;

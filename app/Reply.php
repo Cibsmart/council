@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,12 +16,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int            $user_id
  * @property string         $body
  * @property mixed          $thread
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereBody($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereThreadId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Reply whereUserId($value)
+ * @method static Builder|\App\Reply whereBody($value)
+ * @method static Builder|\App\Reply whereCreatedAt($value)
+ * @method static Builder|\App\Reply whereId($value)
+ * @method static Builder|\App\Reply whereThreadId($value)
+ * @method static Builder|\App\Reply whereUpdatedAt($value)
+ * @method static Builder|\App\Reply whereUserId($value)
  * @mixin \Eloquent
  */
 
@@ -34,7 +35,8 @@ class Reply extends Model
 
     public function path()
     {
-        return route('favourites.store', $this->id);
+//        return route('favourites.store', $this->id);
+        return $this->thread->path() . "#reply-{$this->id}";
     }
 
     public function owner()
