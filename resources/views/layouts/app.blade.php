@@ -7,6 +7,14 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="signedIn" content="{{ Auth::check() }}">
+    
+    <script>
+        window.App = {!! json_encode([
+            'signedIn' => Auth::check(),
+            'user' => Auth::user()
+            ]) !!};
+    </script>
     
     <style>
         body{ padding-bottom: 10px}

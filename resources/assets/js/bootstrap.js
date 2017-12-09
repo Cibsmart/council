@@ -1,4 +1,3 @@
-
 window._ = require('lodash');
 
 /**
@@ -18,6 +17,12 @@ require('bootstrap-sass');
  */
 
 window.Vue = require('vue');
+
+window.Vue.prototype.authorize = function (handler) {
+    let user = window.App.user;
+
+    return user ? handler(user) : false;
+};
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
