@@ -10,9 +10,11 @@
                     {{ $reply->created_at->diffforhumans() }} ...
                 </h5>
                 
-                <div>
-                    <favourite :reply="{{ $reply }}"></favourite>
-                </div>
+                @if(Auth::check())
+                    <div>
+                        <favourite :reply="{{ $reply }}"></favourite>
+                    </div>
+                @endif
             </div>
         </div>
         <div class="panel-body">
@@ -22,7 +24,7 @@
                 </div>
                 
                 <button class="btn btn-xs btn-primary" @click="update">Update</button>
-                <button class="btn btn-xs btn-link" @click="editing = false">Cancel</button>
+                <button class="btn btn-xs btn-link" @click="editing = false"> Cancel </button>
             </div>
             
             <div v-else v-text="body"></div>
