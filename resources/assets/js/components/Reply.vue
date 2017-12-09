@@ -4,8 +4,7 @@
             <div class="level">
                 
                 <h5 class="flex">
-                    <a :href="'/profiles/' + data.owner.name" v-text="data.owner.name"> </a> said {{ data.created_at
-                    }} ...
+                    <a :href="'/profiles/' + data.owner.name" v-text="data.owner.name"> </a> said {{ data.created_at }} ...
                 </h5>
                 
                 <div v-if="signedIn">
@@ -58,8 +57,6 @@
             
             canUpdate(){
                 return this.authorize(user => this.data.user_id === user.id);
-//                if(! window.App.user) return false;
-//                return this.data.user_id === window.App.user.id;
             }
         },
 
