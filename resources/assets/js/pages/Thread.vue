@@ -1,5 +1,5 @@
 <script>
-    import Replies from '../Replies.vue';
+    import Replies from '../components/Replies.vue';
     
     export default {
         
