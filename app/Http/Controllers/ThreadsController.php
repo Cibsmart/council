@@ -19,6 +19,7 @@ class ThreadsController extends Controller
         $this->middleware('auth')->except(['index', 'show']);
     }
 
+
     /**
      * Display a listing of the resource.
      *
@@ -35,6 +36,7 @@ class ThreadsController extends Controller
         return view('threads.index', compact('threads'));
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -44,6 +46,7 @@ class ThreadsController extends Controller
     {
         return view('threads.create');
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -72,6 +75,7 @@ class ThreadsController extends Controller
             ->with('flash', 'Your thread has been published');
     }
 
+
     /**
      * Display the specified resource.
      *
@@ -82,6 +86,7 @@ class ThreadsController extends Controller
     {
         return view('threads.show', compact('thread'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -94,6 +99,7 @@ class ThreadsController extends Controller
         //
     }
 
+
     /**
      * Update the specified resource in storage.
      *
@@ -105,6 +111,7 @@ class ThreadsController extends Controller
     {
         //
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -124,6 +131,7 @@ class ThreadsController extends Controller
 
         return redirect(route('threads.index'));
     }
+
 
     /**
      * @param Channel       $channel

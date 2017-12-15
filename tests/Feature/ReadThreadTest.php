@@ -6,6 +6,7 @@ use App\Channel;
 use App\Reply;
 use App\Thread;
 use App\User;
+use function route;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -15,11 +16,14 @@ class ReadThreadTest extends TestCase
 
     private $thread;
 
+
     public function setUp()
     {
         parent::setUp();
         $this->thread = create(Thread::class);
     }
+
+
     /**
      * A User Can Read All Threads
      *
@@ -31,6 +35,7 @@ class ReadThreadTest extends TestCase
         $this->get('threads')
             ->assertSee($this->thread->title);
     }
+
 
     /**
      * A User Can Read A Single Thread
@@ -44,19 +49,7 @@ class ReadThreadTest extends TestCase
             ->assertSee($this->thread->title);
     }
 
-    /**
-     * A User Can Read Replies That are Associated With A Thread
-     *
-     * @test
-     * @return void
-     */
-    public function aUserCanReadRepliesThatAreAssociatedWithAThread()
-    {
-        $reply = create(Reply::class,['thread_id' => $this->thread->id]);
-        $this->get($this->thread->path())
-            ->assertSee($reply->body);
-    }
-    
+
     /**
      * A User can Filter Threads According to a Channel
      *
@@ -73,7 +66,8 @@ class ReadThreadTest extends TestCase
             ->assertSee($threadInChannel->title)
             ->assertDontSee($threadNotInChannel->title);
     }
-    
+
+
     /**
      * A User Can Filter Threads by any Username
      *
@@ -91,6 +85,7 @@ class ReadThreadTest extends TestCase
             ->assertSee($threadByJohn->title)
             ->assertDontSee($threadNotByJohn->title);
     }
+
 
     /**
      * A User Can Filter Threads by Popularity
@@ -112,7 +107,26 @@ class ReadThreadTest extends TestCase
 
         $this->assertEquals([3,2,0], array_column($response, 'replies_count'));
     }
-    
+
+
+    /**
+     * A User Can Filter Threads by those that are unanswered
+     *
+     * @test
+     * @return void
+     */
+    public function aUserCanFilterThreadsByThoseThatAreUnanswered()
+    {
+        $thread = create(Thread::class);
+
+        create(Reply::class, ['thread_id' => $thread->id]);
+
+        $response = $this->getJson(route('threads.index', ['unanswered' => 1]))->json();
+
+        $this->assertCount(1, $response);
+    }
+
+
     /**
      * A User Can Request All Replies for a Given thread
      *
@@ -127,7 +141,7 @@ class ReadThreadTest extends TestCase
 
         $response = $this->getJson($thread->path() . '/replies')->json();
 
-        $this->assertCount(1, $response['data']);
+        $this->assertCount(2, $response['data']);
         $this->assertEquals(2, $response['total']);
     }
 }
