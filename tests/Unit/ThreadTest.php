@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Channel;
 use App\Thread;
 use App\User;
+use function create;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -20,6 +21,7 @@ class ThreadTest extends TestCase
 
     protected $_thread;
 
+
     /**
      * Setup Method
      *
@@ -30,7 +32,8 @@ class ThreadTest extends TestCase
         parent::setUp();
         $this->_thread = create(Thread::class);
     }
-    
+
+
     /**
      * A Thread can make a String Path
      *
@@ -46,6 +49,7 @@ class ThreadTest extends TestCase
             $thread->path());
     }
 
+
     /**
      * A Thread Has a Creator
      *
@@ -56,6 +60,7 @@ class ThreadTest extends TestCase
     {
         $this->assertInstanceOf(User::class, $this->_thread->creator);
     }
+
 
     /**
      * A Thread Has Replies
@@ -84,7 +89,8 @@ class ThreadTest extends TestCase
 
         $this->assertCount(1, $this->_thread->replies);
     }
-    
+
+
     /**
      * A Thread Belongs to a Channel
      *
@@ -96,5 +102,42 @@ class ThreadTest extends TestCase
         $thread = make(Thread::class);
 
         $this->assertInstanceOf(Channel::class, $thread->channel);
+    }
+
+
+    /**
+     * A Thread Can be Subscribed to
+     *
+     * @test
+     * @return void
+     */
+    public function aThreadCanBeSubscribedTo()
+    {
+        $thread = create(Thread::class);
+
+        $thread->subscribe($userId = 1);
+
+        $this->assertEquals(
+            1,
+            $thread->subscriptions()->where('user_id', $userId)->count()
+        );
+    }
+    
+    
+    /**
+     * A Thread can be UnSubscribed from
+     *
+     * @test
+     * @return void
+     */
+    public function aThreadCanBeUnSubscribedFrom()
+    {
+        $thread = create(Thread::class);
+
+        $thread->subscribe($userId = 1);
+
+        $thread->unSubscribe($userId);
+
+        $this->assertCount(0, $thread->subscriptions);
     }
 }

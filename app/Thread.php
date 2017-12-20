@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use ReflectionClass;
 
 /**
  * App\Thread
@@ -19,6 +18,7 @@ use ReflectionClass;
  * @property int            $channel_id
  * @property string         $title
  * @property string         $body
+ * @property mixed          $subscriptions
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread filter($filters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
@@ -37,7 +37,6 @@ class Thread extends Model
 
     protected $with = ['creator', 'channel'];
 
-
     protected static function boot()
     {
         parent::boot();
@@ -55,7 +54,6 @@ class Thread extends Model
 //               $reply->delete();
 //            });
         });
-
     }
 
 
@@ -98,5 +96,30 @@ class Thread extends Model
     public function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
+    }
+
+
+    public function subscribe($userId = null)
+    {
+        $this->subscriptions()->create([
+            'user_id' => $userId ?: auth()->id(),
+        ]);
+    }
+
+
+    public function unSubscribe($userId = null)
+    {
+        $this->subscriptions()
+            ->where('user_id', $userId ?: auth()->id())
+            ->delete();
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(ThreadSubscription::class);
     }
 }
