@@ -23,6 +23,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+
+//Threads
 Route::get('threads', 'ThreadsController@index')
     ->name('threads.index');
 
@@ -41,6 +43,8 @@ Route::post('threads', 'ThreadsController@store')
 Route::get('threads/{channel}', 'ThreadsController@index')
     ->name('channel.index');
 
+
+//Replies
 Route::get('threads/{channel}/{thread}/replies', 'RepliesController@index')
     ->name('replies.index');
 
@@ -53,11 +57,21 @@ Route::delete('replies/{reply}', 'RepliesController@destroy')
 Route::patch('replies/{reply}', 'RepliesController@update')
     ->name('replies.update');
 
+Route::post('threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@store')
+    ->name('subscriptions.store');
+
+Route::delete('threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@destroy')
+    ->name('subscriptions.destroy');
+
+
+//Favourites
 Route::post('replies/{reply}/favourites', 'FavouritesController@store')
     ->name('favourites.store');
 
 Route::delete('replies/{reply}/favourites', 'FavouritesController@destroy')
     ->name('favourites.delete');
 
+
+//Profiles
 Route::get('profiles/{user}', 'ProfilesController@show')
     ->name('profiles.show');
