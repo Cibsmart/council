@@ -15,6 +15,7 @@ class ThreadWasUpdated extends Notification
 
     protected $reply;
 
+
     /**
      * Create a new notification instance.
      *
@@ -61,7 +62,8 @@ class ThreadWasUpdated extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => 'Temporary Placeholder'
+            'message' => $this->reply->owner->name . ' replied to ' . $this->thread->title,
+            'link' => $this->reply->path()
         ];
     }
 }

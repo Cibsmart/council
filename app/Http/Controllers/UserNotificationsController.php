@@ -14,9 +14,9 @@ class UserNotificationsController extends Controller
     }
 
 
-    public function index(User $user)
+    public function index()
     {
-        return auth()->user()->unReadNotifications;
+        return auth()->user()->unreadNotifications;
     }
 
 
