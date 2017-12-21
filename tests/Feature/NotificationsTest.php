@@ -7,6 +7,7 @@ use App\Thread;
 use App\User;
 use function auth;
 use function create;
+use Illuminate\Notifications\DatabaseNotification;
 use function route;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -14,6 +15,14 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class NotificationsTest extends TestCase
 {
     use DatabaseMigrations;
+
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->signIn();
+    }
 
     
     /**
@@ -25,8 +34,6 @@ class NotificationsTest extends TestCase
      */
     public function aNotificationIsPreparedWhenASubscribedThreadReceivesANewReplyThatIsNotByTheCurrentUser()
     {
-        $this->signIn();
-
         $thread = create(Thread::class)->subscribe();
 
         $this->assertCount(0, auth()->user()->notifications);
@@ -55,20 +62,12 @@ class NotificationsTest extends TestCase
      */
     public function aUserCanFetchTheirUnreadNotifications()
     {
-        $this->signIn();
+        create(DatabaseNotification::class);
 
-        $thread = create(Thread::class)->subscribe();
-
-        $thread->addReply([
-            'user_id' => create(User::class)->id,
-            'body' => 'Some Reply Here'
-        ]);
-
-        $user = auth()->user();
-
-        $response =$this->getJson(route('notifications.index', [$user->name]))->json();
-
-        $this->assertCount(1, $response);
+        $this->assertCount(
+            1,
+            $this->getJson(route('notifications.index', [auth()->user()->name]))->json()
+        );
 
     }
 
@@ -81,24 +80,16 @@ class NotificationsTest extends TestCase
      */
     public function aUserCanMarkANotificationAsRead()
     {
-        $this->signIn();
+        create(DatabaseNotification::class);
 
-        $thread = create(Thread::class)->subscribe();
+        tap(auth()->user(), function ($user)
+        {
+            $this->assertCount(1, $user->unReadNotifications);
 
-        $thread->addReply([
-            'user_id' => create(User::class)->id,
-            'body' => 'Some Reply Here'
-        ]);
+            $this->delete(route('notifications.destroy', [$user->name, $user->unReadNotifications->first()->id]));
 
-        $user = auth()->user();
-
-        $this->assertCount(1, $user->unReadNotifications);
-
-        $notificationId = $user->unReadNotifications->first()->id;
-
-        $this->delete(route('notifications.destroy', [$user->name, $notificationId]));
-
-        $this->assertCount(0, $user->fresh()->unReadNotifications);
+            $this->assertCount(0, $user->fresh()->unReadNotifications);
+        });
 
     }
 }
