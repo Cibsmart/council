@@ -7,6 +7,7 @@ use App\Thread;
 use App\User;
 use function auth;
 use function create;
+use Exception;
 use Illuminate\Auth\AuthenticationException;
 use function route;
 use Tests\TestCase;
@@ -151,5 +152,27 @@ class ParticipateInForumTest extends TestCase
             'id' => $reply->id,
             'body' => $replyUpdate
         ]);
+    }
+    
+    
+    /**
+     * Replies that contain spam may not be create
+     *
+     * @test
+     * @return void
+     */
+    public function repliesThatContainSpamMayNotBeCreate()
+    {
+        $this->signIn();
+
+        $thread = create(Thread::class);
+
+        $reply = create(Reply::class, [
+           'body' => 'Yahoo Customer Support'
+        ]);
+
+        $this->expectException(Exception::class);
+
+        $this->post($thread->path() . '/replies', $reply->toArray());
     }
 }
