@@ -7,7 +7,6 @@ use App\Notifications\ThreadWasUpdated;
 use App\Thread;
 use App\User;
 use function auth;
-use function create;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -49,7 +48,8 @@ class ThreadTest extends TestCase
 
         $this->assertEquals(
             "/threads/{$thread->channel->slug}/{$thread->id}",
-            $thread->path());
+            $thread->path()
+        );
     }
 
 
@@ -86,14 +86,14 @@ class ThreadTest extends TestCase
     public function aThreadCanAddAReply()
     {
         $this->_thread->addReply([
-            'body' => 'Foobar',
-            'user_id' => 1
+            'body'    => 'Foobar',
+            'user_id' => 1,
         ]);
 
         $this->assertCount(1, $this->_thread->replies);
     }
-    
-    
+
+
     /**
      * A Thread Notifies all Registered Subscribers when a Reply is added
      *
@@ -108,9 +108,9 @@ class ThreadTest extends TestCase
             ->_thread
             ->subscribe()
             ->addReply([
-                'body' => 'Foobar',
-                'user_id' => 1
-        ]);
+                'body'    => 'Foobar',
+                'user_id' => 1,
+            ]);
 
         Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
     }
@@ -147,8 +147,8 @@ class ThreadTest extends TestCase
             $thread->subscriptions()->where('user_id', $userId)->count()
         );
     }
-    
-    
+
+
     /**
      * A Thread can be UnSubscribed from
      *
@@ -165,8 +165,8 @@ class ThreadTest extends TestCase
 
         $this->assertCount(0, $thread->subscriptions);
     }
-    
-    
+
+
     /**
      * It Knows If The Authenticated User Is Subscribed To It
      *
@@ -184,5 +184,26 @@ class ThreadTest extends TestCase
         $thread->subscribe();
 
         $this->assertTrue($thread->isSubscribedTo);
+    }
+
+    /**
+     * A Thread Can Check if the Authenticated User Has Read All Replies
+     *
+     * @test
+     * @return void
+     */
+    public function aThreadCanCheckIfTheAuthenticatedUserHasReadAllReplies()
+    {
+        $this->signIn();
+
+        $thread = create(Thread::class);
+
+        tap(auth()->user(), function ($user) use ($thread){
+            $this->assertTrue($thread->hasUpdatesFor($user));
+
+            $user->read($thread);
+
+            $this->assertFalse($thread->hasUpdatesFor($user));
+        });
     }
 }

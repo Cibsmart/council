@@ -4,7 +4,10 @@ namespace App;
 
 use App\Events\ThreadHasNewReply;
 use App\Notifications\ThreadWasUpdated;
+use function auth;
+use function cache;
 use Illuminate\Database\Eloquent\Model;
+use function sprintf;
 
 /**
  * App\Thread
@@ -141,6 +144,7 @@ class Thread extends Model
             ->where('user_id', auth()->id())
             ->exists();
     }
+    
 
     /**
      * @param $reply
@@ -151,5 +155,13 @@ class Thread extends Model
             ->where('user_id', '!=', $reply->user_id)
             ->each
             ->notify($reply);
+    }
+
+
+    public function hasUpdatesFor($user)
+    {
+        $key = $user->visitedThreadCacheKey($this);
+
+        return $this->updated_at > cache($key);
     }
 }
