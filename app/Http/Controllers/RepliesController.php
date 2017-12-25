@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Inspections\Spam;
 use App\Reply;
 use App\Thread;
+use function request;
+use function resolve;
 
 class RepliesController extends Controller
 {
@@ -18,11 +20,9 @@ class RepliesController extends Controller
         return $thread->replies()->paginate(20);
     }
 
-    public function store($channelId, Thread $thread, Spam $spam)
+    public function store($channelId, Thread $thread)
     {
-        $this->validate(request(), ['body' => 'required']);
-
-        $spam->detect(request('body'));
+        $this->validateReply();
 
         $reply = $thread->addReply([
             'body'    => request('body'),
@@ -36,12 +36,16 @@ class RepliesController extends Controller
         return back()->with('flash', 'Your reply has been left');
     }
 
+
     public function update(Reply $reply)
     {
         $this->authorize('update', $reply);
 
+        $this->validateReply();
+
         $reply->update(request(['body']));
     }
+
 
     public function destroy(Reply $reply)
     {
@@ -54,5 +58,16 @@ class RepliesController extends Controller
         }
 
         return back();
+    }
+
+
+    /**
+     * @param Spam $spam
+     */
+    protected function validateReply()
+    {
+        $this->validate(request(), ['body' => 'required']);
+
+        resolve(Spam::class)->detect(request('body'));
     }
 }
