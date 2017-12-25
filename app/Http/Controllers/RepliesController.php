@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Inspections\Spam;
 use App\Reply;
-use App\Spam;
 use App\Thread;
-use function auth;
-use function back;
-use Exception;
-use function redirect;
-use function request;
-use function response;
-use function stripos;
 
 class RepliesController extends Controller
 {
@@ -27,7 +20,7 @@ class RepliesController extends Controller
 
     public function store($channelId, Thread $thread, Spam $spam)
     {
-        $this->validate(request(), [ 'body' => 'required']);
+        $this->validate(request(), ['body' => 'required']);
 
         $spam->detect(request('body'));
 
@@ -36,7 +29,7 @@ class RepliesController extends Controller
             'user_id' => auth()->id()
         ]);
 
-        if(request()->expectsJson()){
+        if (request()->expectsJson()) {
             return $reply->load('owner');
         }
 
@@ -56,7 +49,7 @@ class RepliesController extends Controller
 
         $reply->delete();
 
-        if(request()->expectsJson()){
+        if (request()->expectsJson()) {
             return response(['status' => 'Reply Deleted']);
         }
 
