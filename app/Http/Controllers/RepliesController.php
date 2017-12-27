@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Inspections\Spam;
 use App\Reply;
 use App\Thread;
+use Exception;
 use function request;
 use function resolve;
+use function response;
 
 class RepliesController extends Controller
 {
@@ -22,18 +24,22 @@ class RepliesController extends Controller
 
     public function store($channelId, Thread $thread)
     {
-        $this->validateReply();
+        try
+        {
+            $this->validateReply();
 
-        $reply = $thread->addReply([
-            'body'    => request('body'),
-            'user_id' => auth()->id()
-        ]);
-
-        if (request()->expectsJson()) {
-            return $reply->load('owner');
+            $reply = $thread->addReply([
+                'body'    => request('body'),
+                'user_id' => auth()->id(),
+            ]);
+        } catch ( Exception $ex )
+        {
+            return response(
+                'Sorry, Your Reply Could Not be Saved at this time',
+                422);
         }
 
-        return back()->with('flash', 'Your reply has been left');
+        return $reply->load('owner');
     }
 
 
@@ -41,9 +47,15 @@ class RepliesController extends Controller
     {
         $this->authorize('update', $reply);
 
-        $this->validateReply();
+        try{
+            $this->validateReply();
 
-        $reply->update(request(['body']));
+            $reply->update(request(['body']));
+        } catch (Exception $ex){
+            return response(
+                'Sorry, Your Reply Could Not be Saved at this time',
+                422);
+        }
     }
 
 
@@ -53,7 +65,8 @@ class RepliesController extends Controller
 
         $reply->delete();
 
-        if (request()->expectsJson()) {
+        if (request()->expectsJson())
+        {
             return response(['status' => 'Reply Deleted']);
         }
 
