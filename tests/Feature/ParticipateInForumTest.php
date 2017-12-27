@@ -9,6 +9,7 @@ use function auth;
 use function create;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+use function make;
 use function route;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -171,8 +172,29 @@ class ParticipateInForumTest extends TestCase
            'body' => 'Yahoo Customer Support'
         ]);
 
-        $this->expectException(Exception::class);
+        $this->post($thread->path() . '/replies', $reply->toArray())
+            ->assertStatus(422);
+    }
+    
+    
+    /**
+     * Users may only Reply a maximum of once per minute
+     *
+     * @test
+     * @return void
+     */
+    public function usersMayOnlyReplyAMaximumOfOncePerMinute()
+    {
+        $this->signIn();
 
-        $this->post($thread->path() . '/replies', $reply->toArray());
+        $thread = create(Thread::class);
+
+        $reply = make(Reply::class, ['body' => 'My Simple Reply']);
+
+        $this->post($thread->path() . '/replies', $reply->toArray())
+            ->assertStatus(200);
+
+        $this->post($thread->path() . '/replies', $reply->toArray())
+            ->assertStatus(422);
     }
 }
