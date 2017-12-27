@@ -26,7 +26,7 @@ class RepliesController extends Controller
     {
         try
         {
-            $this->validateReply();
+            $this->validate(request(), ['body' => 'required|spamfree']);
 
             $reply = $thread->addReply([
                 'body'    => request('body'),
@@ -48,7 +48,7 @@ class RepliesController extends Controller
         $this->authorize('update', $reply);
 
         try{
-            $this->validateReply();
+            $this->validate(request(), ['body' => 'required|spamfree']);
 
             $reply->update(request(['body']));
         } catch (Exception $ex){
@@ -57,6 +57,7 @@ class RepliesController extends Controller
                 422);
         }
     }
+
 
 
     public function destroy(Reply $reply)
@@ -73,14 +74,4 @@ class RepliesController extends Controller
         return back();
     }
 
-
-    /**
-     * @param Spam $spam
-     */
-    protected function validateReply()
-    {
-        $this->validate(request(), ['body' => 'required']);
-
-        resolve(Spam::class)->detect(request('body'));
-    }
 }
