@@ -2,20 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\Reply;
 use App\Thread;
-use App\User;
-use function auth;
-use function create;
 use Illuminate\Notifications\DatabaseNotification;
-use function route;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class NotificationsTest extends TestCase
 {
     use DatabaseMigrations;
-
 
     public function setUp()
     {
@@ -24,7 +18,6 @@ class NotificationsTest extends TestCase
         $this->signIn();
     }
 
-    
     /**
      * A Notification is Prepared When a Subscribed Thread Receives a New Reply
      * That is Not By the Current User
@@ -40,19 +33,18 @@ class NotificationsTest extends TestCase
 
         $thread->addReply([
             'user_id' => auth()->id(),
-            'body' => 'Some Reply Here'
+            'body'    => 'Some Reply Here',
         ]);
 
         $this->assertCount(0, auth()->user()->fresh()->notifications);
 
         $thread->addReply([
             'user_id' => create(Thread::class)->id,
-            'body' => 'Some Reply Here'
+            'body'    => 'Some Reply Here',
         ]);
 
         $this->assertCount(1, auth()->user()->fresh()->notifications);
     }
-
 
     /**
      * A User Can Fetch Their Unread Notifications
@@ -68,9 +60,7 @@ class NotificationsTest extends TestCase
             1,
             $this->getJson(route('notifications.index', [auth()->user()->name]))->json()
         );
-
     }
-
 
     /**
      * A user Can Mark a Notification as Read
@@ -82,14 +72,12 @@ class NotificationsTest extends TestCase
     {
         create(DatabaseNotification::class);
 
-        tap(auth()->user(), function ($user)
-        {
+        tap(auth()->user(), function ($user) {
             $this->assertCount(1, $user->unReadNotifications);
 
             $this->delete(route('notifications.destroy', [$user->name, $user->unReadNotifications->first()->id]));
 
             $this->assertCount(0, $user->fresh()->unReadNotifications);
         });
-
     }
 }

@@ -66,6 +66,15 @@ class Reply extends Model
         return $this->belongsTo(Thread::class);
     }
 
+
+    public function mentionedUsers()
+    {
+        preg_match_all('/\@([^\s\.]+)/', $this->body, $matches);
+
+        return $matches[1];
+    }
+
+
     public function wasJustPublished()
     {
         return $this->created_at->gt(Carbon::now()->subMinute());

@@ -2,12 +2,8 @@
 
 namespace App;
 
-use App\Events\ThreadHasNewReply;
-use App\Notifications\ThreadWasUpdated;
-use function auth;
-use function cache;
+use App\Events\ThreadReceivedNewReply;
 use Illuminate\Database\Eloquent\Model;
-use function sprintf;
 
 /**
  * App\Thread
@@ -40,7 +36,7 @@ class Thread extends Model
 
     protected $guarded = [];
 
-    protected $with = ['creator', 'channel' ];
+    protected $with = ['creator', 'channel'];
 
     protected $appends = ['isSubscribedTo'];
 
@@ -63,53 +59,44 @@ class Thread extends Model
         });
     }
 
-
     public function path()
     {
         return "/threads/{$this->channel->slug}/{$this->id}";
     }
-
 
     public function replies()
     {
         return $this->hasMany(Reply::class);
     }
 
-
     public function getReplyCountAttribute()
     {
         return $this->replies()->count();
     }
-
 
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-
     public function channel()
     {
         return $this->belongsTo(Channel::class);
     }
 
-
     public function addReply($reply)
     {
         $reply = $this->replies()->create($reply);
 
-//        event(new ThreadHasNewReply($this, $reply));
-        $this->notifySubscribers($reply);
+        event(new ThreadReceivedNewReply($reply));
 
         return $reply;
     }
-
 
     public function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
     }
-
 
     public function subscribe($userId = null)
     {
@@ -120,14 +107,12 @@ class Thread extends Model
         return $this;
     }
 
-
     public function unSubscribe($userId = null)
     {
         $this->subscriptions()
             ->where('user_id', $userId ?: auth()->id())
             ->delete();
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -137,14 +122,12 @@ class Thread extends Model
         return $this->hasMany(ThreadSubscription::class);
     }
 
-
     public function getIsSubscribedToAttribute()
     {
         return $this->subscriptions()
             ->where('user_id', auth()->id())
             ->exists();
     }
-    
 
     /**
      * @param $reply
@@ -156,7 +139,6 @@ class Thread extends Model
             ->each
             ->notify($reply);
     }
-
 
     public function hasUpdatesFor($user)
     {
