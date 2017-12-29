@@ -60023,6 +60023,7 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn btn-xs btn-link",
+                    attrs: { type: "button" },
                     on: {
                       click: function($event) {
                         _vm.editing = false
@@ -60033,7 +60034,7 @@ var render = function() {
                 )
               ])
             ])
-          : _c("div", { domProps: { textContent: _vm._s(_vm.body) } })
+          : _c("div", { domProps: { innerHTML: _vm._s(_vm.body) } })
       ]),
       _vm._v(" "),
       _vm.canUpdate

@@ -5,6 +5,7 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use function preg_replace;
 
 /**
  * App\Reply
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int            $user_id
  * @property string         $body
  * @property mixed          $thread
+ * @property mixed          $attributes
  * @method static Builder|\App\Reply whereBody($value)
  * @method static Builder|\App\Reply whereCreatedAt($value)
  * @method static Builder|\App\Reply whereId($value)
@@ -69,9 +71,18 @@ class Reply extends Model
 
     public function mentionedUsers()
     {
-        preg_match_all('/\@([^\s\.]+)/', $this->body, $matches);
+        preg_match_all('/\@([\w\-]+)/', $this->body, $matches);
 
         return $matches[1];
+    }
+
+
+    public function setBodyAttribute($body)
+    {
+        $this->attributes['body'] = preg_replace(
+            '/@([\w\-]+)/',
+            '<a href="/profiles/$1">$0</a>',
+            $body);
     }
 
 
