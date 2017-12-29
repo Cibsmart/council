@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Inspections\Spam;
+use App\Http\Requests\CreatePostRequest;
 use App\Reply;
 use App\Thread;
 use Exception;
-use Illuminate\Support\Facades\Gate;
-use function request;
-use function resolve;
-use function response;
 
 class RepliesController extends Controller
 {
@@ -23,50 +19,31 @@ class RepliesController extends Controller
         return $thread->replies()->paginate(20);
     }
 
-    public function store($channelId, Thread $thread)
+    public function store($channelId, Thread $thread, CreatePostRequest $form)
     {
-
-        if(Gate::denies('create', new Reply)){
-            return response(
-                'You are posting to frequently. Please take a break. :)',
-                422);
-        }
-
-        try
-        {
-            $this->validate(request(), ['body' => 'required|spamfree']);
-
-            $reply = $thread->addReply([
-                'body'    => request('body'),
-                'user_id' => auth()->id(),
-            ]);
-        } catch ( Exception $ex )
-        {
-            return response(
-                'Sorry, Your Reply Could Not be Saved at this time',
-                422);
-        }
-
-        return $reply->load('owner');
+        return $thread->addReply([
+            'body'    => request('body'),
+            'user_id' => auth()->id(),
+        ])->load('owner');
     }
-
 
     public function update(Reply $reply)
     {
         $this->authorize('update', $reply);
 
-        try{
+        try
+        {
             $this->validate(request(), ['body' => 'required|spamfree']);
 
             $reply->update(request(['body']));
-        } catch (Exception $ex){
+        } catch ( Exception $ex )
+        {
             return response(
                 'Sorry, Your Reply Could Not be Saved at this time',
-                422);
+                422
+            );
         }
     }
-
-
 
     public function destroy(Reply $reply)
     {
@@ -81,5 +58,4 @@ class RepliesController extends Controller
 
         return back();
     }
-
 }

@@ -157,13 +157,15 @@ class ParticipateInForumTest extends TestCase
     
     
     /**
-     * Replies that contain spam may not be create
+     * Replies that contain spam may not be created
      *
      * @test
      * @return void
      */
-    public function repliesThatContainSpamMayNotBeCreate()
+    public function repliesThatContainSpamMayNotBeCreated()
     {
+        $this->withExceptionHandling();
+
         $this->signIn();
 
         $thread = create(Thread::class);
@@ -172,7 +174,7 @@ class ParticipateInForumTest extends TestCase
            'body' => 'Yahoo Customer Support'
         ]);
 
-        $this->post($thread->path() . '/replies', $reply->toArray())
+        $this->postJson($thread->path() . '/replies', $reply->toArray())
             ->assertStatus(422);
     }
     
@@ -185,6 +187,8 @@ class ParticipateInForumTest extends TestCase
      */
     public function usersMayOnlyReplyAMaximumOfOncePerMinute()
     {
+        $this->withExceptionHandling();
+
         $this->signIn();
 
         $thread = create(Thread::class);
@@ -195,6 +199,6 @@ class ParticipateInForumTest extends TestCase
             ->assertStatus(200);
 
         $this->post($thread->path() . '/replies', $reply->toArray())
-            ->assertStatus(422);
+            ->assertStatus(429);
     }
 }
