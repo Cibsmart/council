@@ -45,14 +45,14 @@ class MentionUsersTest extends TestCase
      * @test
      * @return void
      */
-//    public function itCanFetchAllMentionedUsersStartingWithTheGivenCharacters()
-//    {
-//        create(User::class, ['name' => 'JohnDoe']);
-//        create(User::class, ['name' => 'JohnDoe2']);
-//        create(User::class, ['name' => 'JaneDoe']);
-//
-//        $result = $this->getJson('/api/users', ['name' => 'Joh']);
-//
-//        $this->assertCount(2, $result->json());
-//    }
+    public function itCanFetchAllMentionedUsersStartingWithTheGivenCharacters()
+    {
+        create(User::class, ['name' => 'JohnDoe']);
+        create(User::class, ['name' => 'JohnDoe2']);
+        create(User::class, ['name' => 'JaneDoe']);
+
+        $result = $this->json('GET','/api/users', ['name' => 'Joh']);
+
+        $this->assertCount(2, $result->json());
+    }
 }
