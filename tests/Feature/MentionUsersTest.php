@@ -39,4 +39,20 @@ class MentionUsersTest extends TestCase
     }
 
     
+    /**
+     * It can fetch all mentioned Users starting with the given characters
+     *
+     * @test
+     * @return void
+     */
+//    public function itCanFetchAllMentionedUsersStartingWithTheGivenCharacters()
+//    {
+//        create(User::class, ['name' => 'JohnDoe']);
+//        create(User::class, ['name' => 'JohnDoe2']);
+//        create(User::class, ['name' => 'JaneDoe']);
+//
+//        $result = $this->getJson('/api/users', ['name' => 'Joh']);
+//
+//        $this->assertCount(2, $result->json());
+//    }
 }
