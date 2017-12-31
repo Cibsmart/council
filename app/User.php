@@ -19,6 +19,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property mixed                                                                                                          $threads
  * @property mixed                                                                                                          $activity
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property mixed                                                                                                          avatar_path
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereId($value)
@@ -86,5 +87,13 @@ class User extends Authenticatable
             $this->visitedThreadCacheKey($thread),
             Carbon::now()
         );
+    }
+
+
+    public function avatar()
+    {
+        return $this->avatar_path ?
+            '/storage/' . $this->avatar_path :
+            '/storage/avatars/default_avatar.jpg';
     }
 }

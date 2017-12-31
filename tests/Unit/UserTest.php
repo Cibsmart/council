@@ -25,4 +25,22 @@ class UserTest extends TestCase
 
         $this->assertEquals($reply->id, $user->lastReply->id);
     }
+    
+    
+    /**
+     * A User Can Determine their avatar path
+     *
+     * @test
+     * @return void
+     */
+    public function aUserCanDetermineTheirAvatarPath()
+    {
+        $user = create(User::class);
+
+        $this->assertEquals('/storage/avatars/default_avatar.jpg', $user->avatar());
+
+        $user->avatar_path = 'avatars/me.jpg';
+
+        $this->assertEquals('/storage/avatars/me.jpg', $user->avatar());
+    }
 }
