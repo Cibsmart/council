@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use function back;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use function response;
 
 class UserAvatarController extends Controller
 {
@@ -19,6 +20,6 @@ class UserAvatarController extends Controller
             'avatar_path' => request()->file('avatar')->store('avatars', 'public')
         ]);
 
-        return back();
+        return response([], 204);
     }
 }
