@@ -1,0 +1,45 @@
+2018-01-11 12:54:32,915 INFO o.a.j.u.JMeterUtils: Setting Locale to en_US
+2018-01-11 12:54:32,942 INFO o.a.j.JMeter: Loading user properties from: C:\jmeter\apache-jmeter-3.3\bin\user.properties
+2018-01-11 12:54:32,944 INFO o.a.j.JMeter: Loading system properties from: C:\jmeter\apache-jmeter-3.3\bin\system.properties
+2018-01-11 12:54:32,953 INFO o.a.j.JMeter: Copyright (c) 1998-2017 The Apache Software Foundation
+2018-01-11 12:54:32,954 INFO o.a.j.JMeter: Version 3.3 r1808647
+2018-01-11 12:54:32,954 INFO o.a.j.JMeter: java.version=1.8.0_131
+2018-01-11 12:54:32,954 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2018-01-11 12:54:32,954 INFO o.a.j.JMeter: os.name=Windows 10
+2018-01-11 12:54:32,954 INFO o.a.j.JMeter: os.arch=amd64
+2018-01-11 12:54:32,954 INFO o.a.j.JMeter: os.version=10.0
+2018-01-11 12:54:32,954 INFO o.a.j.JMeter: file.encoding=Cp1252
+2018-01-11 12:54:32,954 INFO o.a.j.JMeter: Max memory     =536870912
+2018-01-11 12:54:32,955 INFO o.a.j.JMeter: Available Processors =4
+2018-01-11 12:54:32,960 INFO o.a.j.JMeter: Default Locale=English (United States)
+2018-01-11 12:54:32,961 INFO o.a.j.JMeter: JMeter  Locale=English (United States)
+2018-01-11 12:54:32,961 INFO o.a.j.JMeter: JMeterHome=C:\jmeter\apache-jmeter-3.3
+2018-01-11 12:54:32,961 INFO o.a.j.JMeter: user.dir  =C:\code\forum54
+2018-01-11 12:54:32,962 INFO o.a.j.JMeter: PWD       =C:\code\forum54
+2018-01-11 12:54:32,963 INFO o.a.j.JMeter: IP: 169.254.58.15 Name: Cibsmart FullName: Cibsmart
+2018-01-11 12:54:33,226 INFO o.a.j.g.a.LookAndFeelCommand: Using look and feel: javax.swing.plaf.metal.MetalLookAndFeel [Metal, CrossPlatform]
+2018-01-11 12:54:33,235 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2018-01-11 12:54:34,131 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2018-01-11 12:54:34,131 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2018-01-11 12:54:35,483 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.assertions.BSFAssertion
+2018-01-11 12:54:36,082 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.extractor.BSFPostProcessor
+2018-01-11 12:54:36,131 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.modifiers.BSFPreProcessor
+2018-01-11 12:54:36,180 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-01-11 12:54:36,180 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-01-11 12:54:36,180 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-01-11 12:54:36,181 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-01-11 12:54:36,181 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2018-01-11 12:54:36,181 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2018-01-11 12:54:36,494 INFO o.a.j.e.KeyToolUtils: Exception checking for keytool existence, will return false, try another way.
+2018-01-11 12:54:36,783 INFO o.a.j.e.KeyToolUtils: keytool found at 'C:\Program Files\Java\jre1.8.0_131\bin\keytool'
+2018-01-11 12:54:36,784 INFO o.a.j.p.h.p.ProxyControl: HTTP(S) Test Script Recorder SSL Proxy will use keys that support embedded 3rd party resources in file C:\jmeter\apache-jmeter-3.3\bin\proxyserver.jks
+2018-01-11 12:54:36,982 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.protocol.java.sampler.BSFSampler
+2018-01-11 12:54:37,042 INFO o.a.j.s.FileServer: Default base='C:\code\forum54'
+2018-01-11 12:54:37,163 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.protocol.mongodb.config.MongoSourceElement
+2018-01-11 12:54:37,163 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.protocol.mongodb.sampler.MongoScriptSampler
+2018-01-11 12:54:37,547 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.timers.BSFTimer
+2018-01-11 12:54:37,587 INFO o.a.j.g.u.MenuFactory: Skipping org.apache.jmeter.visualizers.BSFListener
+2018-01-11 12:54:37,799 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2018-01-11 12:54:37,800 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to ISO-8859-1
+2018-01-11 12:54:37,800 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2018-01-11 12:54:37,800 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
