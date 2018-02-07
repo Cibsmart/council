@@ -5,12 +5,8 @@ namespace App\Http\Controllers;
 use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Thread;
-use function array_map;
-use function collect;
+use App\Trending;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
-use function json_decode;
-use function json_encode;
 
 class ThreadsController extends Controller
 {
@@ -24,7 +20,7 @@ class ThreadsController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function index(Channel $channel, ThreadFilters $filters)
+    public function index(Channel $channel, ThreadFilters $filters, Trending $trending)
     {
         $threads = $this->getThreads($channel, $filters);
 
@@ -32,7 +28,7 @@ class ThreadsController extends Controller
             return $threads;
         }
 
-        $trending = array_map('json_decode',Redis::zrevrange('trending_threads', 0, 4));
+        $trending = $trending->get();
 
         return view('threads.index', compact('threads', 'trending'));
     }
@@ -50,7 +46,7 @@ class ThreadsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function store(Request $request)
@@ -58,14 +54,14 @@ class ThreadsController extends Controller
         $this->validate($request, [
             'title'      => 'required|spamfree',
             'body'       => 'required|spamfree',
-            'channel_id' => 'required|exists:channels,id'
+            'channel_id' => 'required|exists:channels,id',
         ]);
 
         $thread = new Thread([
             'user_id'    => auth()->id(),
             'channel_id' => request('channel_id'),
             'title'      => request('title'),
-            'body'       => request('body')
+            'body'       => request('body'),
         ]);
 
         $thread->save();
@@ -77,19 +73,16 @@ class ThreadsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Thread $thread
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function show($channel, Thread $thread)
+    public function show($channel, Thread $thread, Trending $trending)
     {
         if (auth()->check()) {
             auth()->user()->read($thread);
         }
 
-        Redis::zincrby('trending_threads', 1, json_encode([
-            'title' => $thread->title,
-            'path' => $thread->path()
-        ]));
+        $trending->push($thread);
 
         return view('threads.show', compact('thread'));
     }
@@ -97,7 +90,7 @@ class ThreadsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
     public function edit(Thread $thread)
@@ -108,8 +101,8 @@ class ThreadsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Thread  $thread
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Thread              $thread
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Thread $thread)
@@ -120,7 +113,7 @@ class ThreadsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Thread $thread
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      */
     public function destroy($channel, Thread $thread)
