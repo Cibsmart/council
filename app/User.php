@@ -20,6 +20,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property mixed                                                                                                          $activity
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property mixed                                                                                                          avatar_path
+ * @property bool                                                                                                           confirm
+ * @property bool                                                                                                           confirmed
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereId($value)
@@ -39,7 +41,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'avatar_path'
+        'name', 'email', 'password', 'avatar_path', 'confirmation_token', 'confirmed'
     ];
 
     /**
@@ -49,6 +51,10 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token', 'email'
+    ];
+
+    protected  $casts = [
+        'confirmed' => 'boolean'
     ];
 
     public function getRouteKeyName()
@@ -95,5 +101,11 @@ class User extends Authenticatable
         return $avatar ?
             '/storage/' . $avatar :
             '/storage/avatars/default_avatar.jpg';
+    }
+
+    public function confirm()
+    {
+        $this->confirmed = true;
+        $this->save();
     }
 }
