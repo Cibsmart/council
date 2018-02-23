@@ -6,6 +6,7 @@ use App\Channel;
 use App\Reply;
 use App\Thread;
 use App\User;
+use function create;
 use function route;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -144,4 +145,22 @@ class ReadThreadTest extends TestCase
         $this->assertCount(2, $response['data']);
         $this->assertEquals(2, $response['total']);
     }
+    
+    /**
+     * We Record a New Visit Each Time the Thread is Read
+     *
+     * @test
+     * @return void
+     */
+    public function weRecordANewVisitEachTimeTheThreadIsRead()
+    {
+        $thread = create(Thread::class);
+
+        $this->assertSame(0, $thread->visits);
+
+        $this->call('GET', $thread->path());
+
+        $this->assertEquals(1, $thread->fresh()->visits);
+    }
+
 }

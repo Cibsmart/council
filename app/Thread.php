@@ -149,9 +149,9 @@ class Thread extends Model
     }
 
     //Methods No 2 of Threads Views Count using Redis
-    public function visits()
-    {
-        return new Visits($this);
-    }
+//    public function visits()
+//    {
+//        return new Visits($this);
+//    }
 
 }
