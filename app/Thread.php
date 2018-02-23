@@ -148,6 +148,7 @@ class Thread extends Model
         return $this->updated_at > cache($key);
     }
 
+    //Methods No 2 of Threads Views Count using Redis
     public function visits()
     {
         return new Visits($this);
