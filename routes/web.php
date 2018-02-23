@@ -38,7 +38,7 @@ Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy')
     ->name('threads.delete');
 
 Route::post('threads', 'ThreadsController@store')
-    ->name('threads.store');
+    ->name('threads.store')->middleware('must-be-confirmed');
 
 Route::get('threads/{channel}', 'ThreadsController@index')
     ->name('channel.index');

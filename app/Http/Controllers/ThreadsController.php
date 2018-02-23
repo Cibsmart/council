@@ -7,12 +7,14 @@ use App\Filters\ThreadFilters;
 use App\Thread;
 use App\Trending;
 use Illuminate\Http\Request;
+use function redirect;
 
 class ThreadsController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth')->except(['index', 'show']);
+//        $this->middleware('must-be-confirmed')->only('store');
     }
 
     /**
