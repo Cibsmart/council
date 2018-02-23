@@ -9,6 +9,7 @@ use App\User;
 use function auth;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -205,5 +206,28 @@ class ThreadTest extends TestCase
 
             $this->assertFalse($thread->hasUpdatesFor($user));
         });
+    }
+    
+    /**
+     * A Thread Records Each Visit
+     *
+     * @test
+     * @return void
+     */
+    public function aThreadRecordsEachVisit()
+    {
+       $thread = make(Thread::class, ['id' => 1]);
+
+       $thread->visits()->reset();
+
+        $this->assertSame(0, $thread->visits()->count());
+
+        $thread->visits()->record();
+
+       $this->assertEquals(1, $thread->visits()->count());
+
+       $thread->visits()->record();
+
+       $this->assertEquals(2, $thread->visits()->count());
     }
 }
