@@ -5,6 +5,8 @@ namespace App;
 use App\Events\ThreadReceivedNewReply;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Redis;
+use function is_numeric;
+use function preg_replace_callback;
 
 /**
  * App\Thread
@@ -21,6 +23,8 @@ use Illuminate\Support\Facades\Redis;
  * @property string         $title
  * @property string         $body
  * @property mixed          $subscriptions
+ * @property mixed          $attributes
+ * @property mixed          $slug
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread filter($filters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
@@ -62,7 +66,12 @@ class Thread extends Model
 
     public function path()
     {
-        return "/threads/{$this->channel->slug}/{$this->id}";
+        return "/threads/{$this->channel->slug}/{$this->slug}";
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 
     public function replies()
@@ -141,7 +150,7 @@ class Thread extends Model
             ->notify($reply);
     }
 
-    public function hasUpdatesFor($user)
+    public function hasUpdatesFor(User $user)
     {
         $key = $user->visitedThreadCacheKey($this);
 
@@ -153,5 +162,27 @@ class Thread extends Model
 //    {
 //        return new Visits($this);
 //    }
+
+    public function setSlugAttribute($value)
+    {
+        if(static::whereSlug($slug = str_slug($value))->exists()){
+            $slug = $this->incrementSlug($slug);
+        }
+
+        $this->attributes['slug'] =  $slug;
+    }
+
+    private function incrementSlug($slug)
+    {
+        $max = static::whereTitle($this->title)->latest('id')->value('slug');
+
+        if(is_numeric($max[-1])){
+            return preg_replace_callback('/(\d+)$/', function ($matches){
+                return $matches[1] + 1;
+            }, $max);
+        }
+
+        return "{$slug}-2";
+    }
 
 }

@@ -8,6 +8,7 @@ use App\Thread;
 use App\Trending;
 use Illuminate\Http\Request;
 use function redirect;
+use function str_slug;
 
 class ThreadsController extends Controller
 {
@@ -64,6 +65,7 @@ class ThreadsController extends Controller
             'channel_id' => request('channel_id'),
             'title'      => request('title'),
             'body'       => request('body'),
+            'slug'       => request('title')
         ]);
 
         $thread->save();

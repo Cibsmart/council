@@ -38,17 +38,17 @@ class ThreadTest extends TestCase
 
 
     /**
-     * A Thread can make a String Path
+     * A Thread Has A Path
      *
      * @test
      * @return void
      */
-    public function aThreadCanMakeAStringPath()
+    public function aThreadHasAPath()
     {
-        $thread = make(Thread::class);
+        $thread = create(Thread::class);
 
         $this->assertEquals(
-            "/threads/{$thread->channel->slug}/{$thread->id}",
+            "/threads/{$thread->channel->slug}/{$thread->slug}",
             $thread->path()
         );
     }

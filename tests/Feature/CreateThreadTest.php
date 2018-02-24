@@ -57,12 +57,12 @@ class CreateThreadTest extends TestCase
     
 
     /**
-     * An Authenticated User Can Create New Forum Threads
+     * A  User Can Create New Forum Threads
      *
      * @test
      * @return void
      */
-    public function anAuthenticatedUserCanCreateNewForumThreads()
+    public function AUserCanCreateNewForumThreads()
     {
         $this->signIn();
 
@@ -98,6 +98,7 @@ class CreateThreadTest extends TestCase
         $this->publishThread(['body' => null])
             ->assertSessionHasErrors('body');
     }
+    
 
     /**
      * A Thread Requires A Body
@@ -115,6 +116,30 @@ class CreateThreadTest extends TestCase
         $this->publishThread(['channel_id' => 3])
             ->assertSessionHasErrors('channel_id');
     }
+
+    /**
+     * A Thread Requires a Unique Slug
+     *
+     * @test
+     * @return void
+     */
+    public function aThreadRequiresAUniqueSlug()
+    {
+        $this->signIn();
+
+        $thread = create(Thread::class, ['title' => 'Foo Title', 'slug' => 'foo-title']);
+
+        $this->assertEquals($thread->fresh()->slug, 'foo-title');
+
+        $this->post(route('threads.store'), $thread->toArray());
+
+        $this->assertTrue(Thread::whereSlug('foo-title-2')->exists());
+
+        $this->post(route('threads.store'), $thread->toArray());
+
+        $this->assertTrue(Thread::whereSlug('foo-title-3')->exists());
+    }
+
 
     /**
      * Unauthorized Users May Not Delete Threads
