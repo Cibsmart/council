@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use function redirect;
@@ -12,9 +13,14 @@ class RegisterConfirmationController extends Controller
 {
     public function index()
     {
-        User::where('confirmation_token',request('token'))
-            ->firstOrFail()
-            ->confirm();
+        try{
+            User::where('confirmation_token',request('token'))
+                ->firstOrFail()
+                ->confirm();
+        }catch (Exception $e){
+            return redirect(route('threads.index'))
+                ->with('flash', 'Unknown Token');
+        }
 
         return redirect(route('threads.index'))
             ->with('flash', 'Your Account is Now Confirmed! You May Post to the Forum');

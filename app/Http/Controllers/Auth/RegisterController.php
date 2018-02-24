@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Mail\PleaseConfirmYourEmail;
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use function str_random;
@@ -69,5 +72,19 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
             'confirmation_token' => str_random(25)
         ]);
+    }
+
+    /**
+     * The user has been registered.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function registered(Request $request, $user)
+    {
+        Mail::to($user)->send(new PleaseConfirmYourEmail($user));
+
+        return redirect($this->redirectPath());
     }
 }

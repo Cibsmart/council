@@ -8,7 +8,9 @@ use App\Reply;
 use App\Thread;
 use App\User;
 use function create;
+use function factory;
 use function get_class;
+use function route;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -27,22 +29,29 @@ class CreateThreadTest extends TestCase
         $this->withExceptionHandling();
 
         $this->get(route('threads.create'))
-            ->assertRedirect('/login');
+            ->assertRedirect(route('login'));
 
         $this->post(route('threads.store'))
-            ->assertRedirect('/login');
+            ->assertRedirect(route('login'));
+
     }
     
     /**
-     * Authenticated Users Must First Confirm Their Email Address Before Creating Threads
+     * New Users Must First Confirm Their Email Address Before Creating Threads
      *
      * @test
      * @return void
      */
-    public function authenticatedUsersMustFirstConfirmTheirEmailAddressBeforeCreatingThreads()
+    public function newUsersMustFirstConfirmTheirEmailAddressBeforeCreatingThreads()
     {
-        $this->publishThread()
-            ->assertRedirect('/threads')
+        $user = factory(User::class)->states('unconfirmed')->create();
+
+        $this->withExceptionHandling()->signIn($user);
+
+        $thread = make(Thread::class);
+
+        $this->post(route('threads.store'), $thread->toArray())
+            ->assertRedirect(route('threads.index'))
             ->assertSessionHas('flash', 'You must first Confirm your email address.');
     }
     
@@ -120,7 +129,7 @@ class CreateThreadTest extends TestCase
         $thread = create(Thread::class);
 
         $this->delete($thread->path())
-            ->assertRedirect('login');
+            ->assertRedirect(route('login'));
 
         $this->signIn();
 
