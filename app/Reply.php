@@ -91,4 +91,9 @@ class Reply extends Model
         return $this->created_at->gt(Carbon::now()->subMinute());
     }
 
+    public function isBest()
+    {
+        return $this->thread->best_reply_id == $this->id;
+    }
+
 }

@@ -63,6 +63,9 @@ Route::post('threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsCont
 Route::delete('threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptionsController@destroy')
     ->name('subscriptions.destroy');
 
+Route::post('replies/{reply}/best', 'BestRepliesController@store')
+    ->name('best-replies.store');
+
 
 //Favourites
 Route::post('replies/{reply}/favourites', 'FavouritesController@store')

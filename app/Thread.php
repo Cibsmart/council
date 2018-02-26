@@ -26,6 +26,7 @@ use function str_slug;
  * @property mixed          $subscriptions
  * @property mixed          $attributes
  * @property mixed          $slug
+ * @property int            best_reply_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread filter($filters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
@@ -197,6 +198,11 @@ class Thread extends Model
 //        }
 //
 //        return "{$slug}-2";
+    }
+
+    public function markBestReply(Reply $reply)
+    {
+        $this->update(['best_reply_id' => $reply->id]);
     }
 
 }
