@@ -7,8 +7,7 @@ use App\Filters\ThreadFilters;
 use App\Thread;
 use App\Trending;
 use Illuminate\Http\Request;
-use function redirect;
-use function str_slug;
+
 
 class ThreadsController extends Controller
 {
@@ -50,7 +49,7 @@ class ThreadsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function store(Request $request)
     {
@@ -60,15 +59,16 @@ class ThreadsController extends Controller
             'channel_id' => 'required|exists:channels,id',
         ]);
 
-        $thread = new Thread([
+        $thread = Thread::create([
             'user_id'    => auth()->id(),
             'channel_id' => request('channel_id'),
             'title'      => request('title'),
-            'body'       => request('body'),
-            'slug'       => request('title')
+            'body'       => request('body')
         ]);
 
-        $thread->save();
+        if(request()->wantsJson()){
+            return response($thread);
+        }
 
         return redirect($thread->path())
             ->with('flash', 'Your thread has been published');

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Redis;
 use function is_numeric;
 use function preg_replace_callback;
+use function str_slug;
 
 /**
  * App\Thread
@@ -62,7 +63,12 @@ class Thread extends Model
 //               $reply->delete();
 //            });
         });
+
+        static::created(function ($thread) {
+            $thread->update(['slug' => $thread->title]);
+        });
     }
+
 
     public function path()
     {
@@ -165,8 +171,10 @@ class Thread extends Model
 
     public function setSlugAttribute($value)
     {
-        if(static::whereSlug($slug = str_slug($value))->exists()){
-            $slug = $this->incrementSlug($slug);
+        $slug = str_slug($value);
+
+        if(static::whereSlug($slug)->exists()){
+            $slug = "{$slug}-" . $this->id;
         }
 
         $this->attributes['slug'] =  $slug;
@@ -174,15 +182,21 @@ class Thread extends Model
 
     private function incrementSlug($slug)
     {
-        $max = static::whereTitle($this->title)->latest('id')->value('slug');
+//        if(static::whereSlug($slug)->exists()){
+//            $slug = "{$slug}-" . $this->id;
+//        }
+//
+//        return $slug;
 
-        if(is_numeric($max[-1])){
-            return preg_replace_callback('/(\d+)$/', function ($matches){
-                return $matches[1] + 1;
-            }, $max);
-        }
-
-        return "{$slug}-2";
+//        $max = static::whereTitle($this->title)->latest('id')->value('slug');
+//
+//        if(is_numeric($max[-1])){
+//            return preg_replace_callback('/(\d+)$/', function ($matches){
+//                return $matches[1] + 1;
+//            }, $max);
+//        }
+//
+//        return "{$slug}-2";
     }
 
 }
