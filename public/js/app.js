@@ -27350,11 +27350,24 @@ __webpack_require__(135);
 
 window.Vue = __webpack_require__(136);
 
-window.Vue.prototype.authorize = function (handler) {
-    var user = window.App.user;
+var authorizations = __webpack_require__(206);
 
-    return user ? handler(user) : false;
+window.Vue.prototype.authorize = function () {
+
+    if (!window.App.signedIn) return false;
+
+    for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
+        params[_key] = arguments[_key];
+    }
+
+    if (typeof params[0] === 'string') {
+        return authorizations[params[0]](params[1]);
+    }
+
+    return params[0](window.App.user);
 };
+
+Vue.prototype.signedIn = window.App.signedIn;
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -59524,6 +59537,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -59538,7 +59554,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             editing: false,
             id: this.data.id,
             body: this.data.body,
-            isBest: false
+            isBest: false,
+            reply: this.data
         };
     },
 
@@ -59546,16 +59563,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         ago: function ago() {
             return __WEBPACK_IMPORTED_MODULE_1_moment___default()(this.data.created_at + 'Z').fromNow();
-        },
-        signedIn: function signedIn() {
-            return window.App.signedIn;
-        },
-        canUpdate: function canUpdate() {
-            var _this = this;
-
-            return this.authorize(function (user) {
-                return _this.data.user_id === user.id;
-            });
         }
     },
 
@@ -60052,48 +60059,50 @@ var render = function() {
           : _c("div", { domProps: { innerHTML: _vm._s(_vm.body) } })
       ]),
       _vm._v(" "),
-      _vm.canUpdate
-        ? _c("div", { staticClass: "panel-footer level" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-xs mr-1",
-                on: {
-                  click: function($event) {
-                    _vm.editing = true
+      _c("div", { staticClass: "panel-footer level" }, [
+        _vm.authorize("updateReply", _vm.reply)
+          ? _c("div", [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-xs mr-1",
+                  on: {
+                    click: function($event) {
+                      _vm.editing = true
+                    }
                   }
-                }
-              },
-              [_vm._v("Edit")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
+                },
+                [_vm._v("Edit")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-xs btn-danger mr-1",
+                  on: { click: _vm.destroy }
+                },
+                [_vm._v("\n                Delete\n            ")]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            directives: [
               {
-                staticClass: "btn btn-xs btn-danger mr-1",
-                on: { click: _vm.destroy }
-              },
-              [_vm._v("\n            Delete\n        ")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: !_vm.isBest,
-                    expression: "! isBest"
-                  }
-                ],
-                staticClass: "btn btn-xs btn-default ml-a",
-                on: { click: _vm.markBestReply }
-              },
-              [_vm._v("\n            Best Reply\n        ")]
-            )
-          ])
-        : _vm._e()
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.isBest,
+                expression: "! isBest"
+              }
+            ],
+            staticClass: "btn btn-xs btn-default ml-a",
+            on: { click: _vm.markBestReply }
+          },
+          [_vm._v("\n            Best Reply\n        ")]
+        )
+      ])
     ]
   )
 }
@@ -60197,14 +60206,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             body: ''
         };
     },
-
-
-    computed: {
-        signedIn: function signedIn() {
-            return window.App.signedIn;
-        }
-    },
-
     mounted: function mounted() {
         $('#body').atwho({
             at: "@",
@@ -62669,6 +62670,27 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */,
+/* 203 */,
+/* 204 */,
+/* 205 */,
+/* 206 */
+/***/ (function(module, exports) {
+
+var user = window.App.user;
+
+module.exports = {
+    updateReply: function updateReply(reply) {
+        return reply.user_id === user.id;
+    }
+};
 
 /***/ })
 /******/ ]);
