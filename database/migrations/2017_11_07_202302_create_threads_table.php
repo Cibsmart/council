@@ -13,7 +13,10 @@ class CreateThreadsTable extends Migration
      */
     public function up()
     {
-        Schema::create('threads', function (Blueprint $table) {
+        Schema::create(/**
+         * @param Blueprint $table
+         */
+            'threads', function (Blueprint $table) {
             $table->increments('id');
             $table->string('slug')->unique()->nullable();
             $table->unsignedInteger('user_id');
@@ -24,6 +27,11 @@ class CreateThreadsTable extends Migration
             $table->text('body');
             $table->unsignedInteger('best_reply_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('best_reply_id')
+                ->references('id')
+                ->on('replies')
+                ->onDelete('set null');
         });
     }
 
