@@ -22,6 +22,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property mixed                                                                                                          avatar_path
  * @property bool                                                                                                           confirm
  * @property bool                                                                                                           confirmed
+ * @property null                                                                                                           confirmation_token
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereId($value)
@@ -103,6 +104,7 @@ class User extends Authenticatable
             '/storage/avatars/default_avatar.jpg';
     }
 
+
     public function confirm()
     {
         $this->confirmed = true;
@@ -110,5 +112,11 @@ class User extends Authenticatable
         $this->confirmation_token = null;
 
         $this->save();
+    }
+
+
+    public function isAdmin()
+    {
+        return in_array($this->name, ['JohnDoe', 'JaneDoe'], true);
     }
 }

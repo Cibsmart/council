@@ -34,6 +34,9 @@ Route::get('threads/create', 'ThreadsController@create')
 Route::get('threads/{channel}/{thread}', 'ThreadsController@show')
     ->name('threads.show');
 
+Route::patch('threads/{channel}/{thread}', 'ThreadsController@update')
+    ->name('threads.update');
+
 Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy')
     ->name('threads.delete');
 
@@ -88,6 +91,13 @@ Route::delete('profiles/{user}/notifications/{notification}', 'UserNotifications
 Route::get('register/confirm', 'Auth\RegisterConfirmationController@index')
     ->name('confirmation.index');
 
+
+//Locked Threads
+Route::post('locked-threads/{threads}', 'LockedThreadsController@store')
+    ->name('locked-threads.store')->middleware('admin');
+
+
+//Api
 Route::get('api/users', 'Api\UsersController@index');
 Route::post('api/users/{user}/avatar', 'Api\UserAvatarController@store')
     ->middleware('auth')

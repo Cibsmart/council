@@ -27,6 +27,7 @@ use function str_slug;
  * @property mixed          $attributes
  * @property mixed          $slug
  * @property int            best_reply_id
+ * @property bool           $locked
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread filter($filters)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Thread whereChannelId($value)
@@ -46,6 +47,8 @@ class Thread extends Model
     protected $with = ['creator', 'channel'];
 
     protected $appends = ['isSubscribedTo'];
+
+    protected $casts = ['locked' => 'boolean'];
 
     protected static function boot()
     {
