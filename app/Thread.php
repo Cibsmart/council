@@ -79,10 +79,12 @@ class Thread extends Model
         return "/threads/{$this->channel->slug}/{$this->slug}";
     }
 
+
     public function getRouteKeyName()
     {
         return 'slug';
     }
+
 
     public function replies()
     {
@@ -212,6 +214,12 @@ class Thread extends Model
     public function lock()
     {
         $this->update(['locked' => true]);
+    }
+
+
+    public function unlock()
+    {
+        $this->update(['locked' => false]);
     }
 
 }

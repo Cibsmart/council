@@ -119,4 +119,5 @@ class User extends Authenticatable
     {
         return in_array($this->name, ['JohnDoe', 'JaneDoe'], true);
     }
+
 }

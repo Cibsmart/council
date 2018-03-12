@@ -93,8 +93,10 @@ Route::get('register/confirm', 'Auth\RegisterConfirmationController@index')
 
 
 //Locked Threads
-Route::post('locked-threads/{threads}', 'LockedThreadsController@store')
+Route::post('locked-threads/{thread}', 'LockedThreadsController@store')
     ->name('locked-threads.store')->middleware('admin');
+Route::delete('locked-threads/{thread}', 'LockedThreadsController@destroy')
+    ->name('locked-threads.destroy')->middleware('admin');
 
 
 //Api

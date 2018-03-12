@@ -39,13 +39,36 @@ class LockThreadsTest extends TestCase
      */
     public function anAdministratorMayLockAThread()
     {
-        $this->signIn(factory(User::class)->states('administrator')->create());
+        $user = factory(User::class)->states('administrator')->create();
+
+        $this->signIn($user);
 
         $thread = create(Thread::class, ['user_id' => auth()->id()]);
 
         $this->post(route('locked-threads.store', $thread));
 
-//        $this->assertTrue($thread->fresh()->locked, 'Failed Asserting that the thread was Locked');
+        $this->assertTrue(
+            $thread->fresh()->locked,
+            'Failed Asserting that the thread was Locked');
+    }
+    
+    /**
+     * An Administrator Can Unlock Threads
+     *
+     * @test
+     * @return void
+     */
+    public function anAdministratorCanUnlockThreads()
+    {
+        $user = factory(User::class)->states('administrator')->create();
+
+        $this->signIn($user);
+
+        $thread = create(Thread::class, ['user_id' => auth()->id(), 'locked' => true]);
+
+        $this->delete(route('locked-threads.destroy', $thread));
+
+        $this->assertFalse($thread->fresh()->locked);
     }
 
 
@@ -59,9 +82,7 @@ class LockThreadsTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create(Thread::class);
-
-        $thread->lock();
+        $thread = create(Thread::class, ['locked' => true]);
 
         $this->post($thread->path() . '/replies', [
             'body' => 'Foobar',
