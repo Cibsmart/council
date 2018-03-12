@@ -49,6 +49,7 @@ abstract class Filters
     public function getFilters()
     {
         //collect() turns the array into a collection with (value, key) and flip (key, value)
-        return collect($this->request->intersect($this->filters))->flip();
+//        return collect($this->request->intersect($this->filters))->flip();
+        return collect(array_filter($this->request->only($this->filters)))->flip();
     }
 }
