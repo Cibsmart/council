@@ -9,7 +9,27 @@
                 {{ $threads->render() }}
             </div>
             
+            {{--Search--}}
             <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Search
+                    </div>
+        
+                    <div class="panel-body">
+                        <form action="{{ route('search.show') }}" method="get">
+                            <div class="form-group">
+                                <input name="q" class="form-control" type="text" placeholder="Search for something">
+                            </div>
+                            
+                            <div class="form-group">
+                                <button class="btn btn-default" type="submit">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                {{--Trending--}}
                 @if(count($trending))
                     <div class="panel panel-default">
                         <div class="panel-heading">

@@ -24,6 +24,10 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 
+//Search
+Route::get('threads/search', 'SearchController@show')
+    ->name('search.show');
+
 //Threads
 Route::get('threads', 'ThreadsController@index')
     ->name('threads.index');

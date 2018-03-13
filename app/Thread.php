@@ -5,7 +5,6 @@ namespace App;
 use App\Events\ThreadReceivedNewReply;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
-use function str_slug;
 
 /**
  * App\Thread
