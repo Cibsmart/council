@@ -53,9 +53,9 @@ class ThreadsController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $this->validate($request, [
+        request()->validate([
             'title'      => 'required|spamfree',
             'body'       => 'required|spamfree',
             'channel_id' => 'required|exists:channels,id',
@@ -69,7 +69,6 @@ class ThreadsController extends Controller
 //        if(! $response->json()['success']){
 //            throw new \Exception('Recaptcha failed');
 //        }
-
 
         $thread = Thread::create([
             'user_id'    => auth()->id(),
