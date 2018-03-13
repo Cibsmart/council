@@ -4,9 +4,7 @@ namespace App;
 
 use App\Events\ThreadReceivedNewReply;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Redis;
-use function is_numeric;
-use function preg_replace_callback;
+use Laravel\Scout\Searchable;
 use function str_slug;
 
 /**
@@ -40,7 +38,7 @@ use function str_slug;
  */
 class Thread extends Model
 {
-    use RecordActivity;
+    use RecordActivity, Searchable;
 
     protected $guarded = [];
 
@@ -73,18 +71,15 @@ class Thread extends Model
         });
     }
 
-
     public function path()
     {
         return "/threads/{$this->channel->slug}/{$this->slug}";
     }
 
-
     public function getRouteKeyName()
     {
         return 'slug';
     }
-
 
     public function replies()
     {
@@ -179,11 +174,11 @@ class Thread extends Model
     {
         $slug = str_slug($value);
 
-        if(static::whereSlug($slug)->exists()){
+        if (static::whereSlug($slug)->exists()) {
             $slug = "{$slug}-" . $this->id;
         }
 
-        $this->attributes['slug'] =  $slug;
+        $this->attributes['slug'] = $slug;
     }
 
     private function incrementSlug($slug)
@@ -210,16 +205,13 @@ class Thread extends Model
         $this->update(['best_reply_id' => $reply->id]);
     }
 
-
     public function lock()
     {
         $this->update(['locked' => true]);
     }
 
-
     public function unlock()
     {
         $this->update(['locked' => false]);
     }
-
 }
