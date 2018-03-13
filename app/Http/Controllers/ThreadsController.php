@@ -66,6 +66,9 @@ class ThreadsController extends Controller
 //            'response' => $request->input('g-recaptcha-response'),
 //            'remoteip' => $_SERVER['REMOTE_ADDR']
 //        ]);
+//        if(! $response->json()['success']){
+//            throw new \Exception('Recaptcha failed');
+//        }
 
 
         $thread = Thread::create([
@@ -124,7 +127,14 @@ class ThreadsController extends Controller
      */
     public function update($channel, Thread $thread)
     {
-        //
+        $this->authorize('update', $thread);
+
+        $thread->update(request()->validate([
+            'title'      => 'required|spamfree',
+            'body'       => 'required|spamfree',
+        ]));
+
+        return $thread;
     }
 
 

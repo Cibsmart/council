@@ -87,6 +87,7 @@ class CreateThreadTest extends TestCase
             ->assertSessionHasErrors('title');
     }
 
+
     /**
      * A Thread Requires A Body
      *
@@ -176,6 +177,7 @@ class CreateThreadTest extends TestCase
             ->assertStatus(403);
     }
     
+
     /**
      * Authorized Users Can Delete Threads
      *
