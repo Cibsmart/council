@@ -23,6 +23,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::view('scan', 'scan');
+
 
 //Search
 Route::get('threads/search', 'SearchController@show')
