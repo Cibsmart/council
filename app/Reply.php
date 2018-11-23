@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use function preg_replace;
+use Stevebauman\Purify\Facades\Purify;
 
 /**
  * App\Reply
@@ -105,4 +106,8 @@ class Reply extends Model
         return $this->isBest();
     }
 
+    public function getBodyAttribute($body)
+    {
+        return Purify::clean($body);
+    }
 }

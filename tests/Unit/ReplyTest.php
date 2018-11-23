@@ -94,4 +94,19 @@ class ReplyTest extends TestCase
 
         $this->assertTrue($reply->fresh()->isBest());
     }
+
+    /**
+     * A Reply Body is Sanitized Automatically
+     *
+     * @test
+     * @return void
+     */
+    public function aReplyBodyIsSanitizedAutomatically()
+    {
+        $body = '<script>alert("Bad")</script><p>This is Okay.</p>';
+
+        $reply = make(Reply::class, compact('body'));
+
+        $this->assertEquals("<p>This is Okay.</p>", $reply->body);
+    }
 }

@@ -5,6 +5,7 @@ namespace App;
 use App\Events\ThreadReceivedNewReply;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
+use Stevebauman\Purify\Facades\Purify;
 
 /**
  * App\Thread
@@ -117,7 +118,7 @@ class Thread extends Model
     public function subscribe($userId = null)
     {
         $this->subscriptions()->create([
-            'user_id' => $userId ?: auth()->id(),
+            'user_id' => $userId ? : auth()->id(),
         ]);
 
         return $this;
@@ -126,7 +127,7 @@ class Thread extends Model
     public function unSubscribe($userId = null)
     {
         $this->subscriptions()
-            ->where('user_id', $userId ?: auth()->id())
+            ->where('user_id', $userId ? : auth()->id())
             ->delete();
     }
 
@@ -173,7 +174,8 @@ class Thread extends Model
     {
         $slug = str_slug($value);
 
-        if (static::whereSlug($slug)->exists()) {
+        if (static::whereSlug($slug)->exists())
+        {
             $slug = "{$slug}-" . $this->id;
         }
 
@@ -219,5 +221,8 @@ class Thread extends Model
         return $this->toArray() + ['path' => $this->path()];
     }
 
-
+    public function getBodyAttribute($body)
+    {
+        return Purify::clean($body);
+    }
 }

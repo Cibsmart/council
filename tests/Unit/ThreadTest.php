@@ -6,6 +6,7 @@ use App\Channel;
 use App\Notifications\ThreadWasUpdated;
 use App\Thread;
 use App\User;
+use function compact;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -194,6 +195,21 @@ class ThreadTest extends TestCase
 
             $this->assertFalse($thread->hasUpdatesFor($user));
         });
+    }
+    
+    /**
+     * A Threads Body is Sanitized Automatically
+     *
+     * @test
+     * @return void
+     */
+    public function aThreadsBodyIsSanitizedAutomatically()
+    {
+        $body = '<script>alert("Bad")</script><p>This is Okay.</p>';
+
+        $thread = make(Thread::class, compact('body'));
+
+        $this->assertEquals("<p>This is Okay.</p>", $thread->body);
     }
 
     /**
