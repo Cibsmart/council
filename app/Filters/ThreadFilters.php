@@ -3,7 +3,6 @@
 namespace App\Filters;
 
 use App\User;
-use Illuminate\Http\Request;
 
 class ThreadFilters extends Filters
 {
@@ -20,7 +19,6 @@ class ThreadFilters extends Filters
 
         return $this->builder->where('user_id', $user->id);
     }
-
 
     public function popular()
     {

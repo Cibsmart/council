@@ -6,10 +6,8 @@ use App\Channel;
 use App\Notifications\ThreadWasUpdated;
 use App\Thread;
 use App\User;
-use function auth;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -24,7 +22,6 @@ class ThreadTest extends TestCase
 
     protected $_thread;
 
-
     /**
      * Setup Method
      *
@@ -35,7 +32,6 @@ class ThreadTest extends TestCase
         parent::setUp();
         $this->_thread = create(Thread::class);
     }
-
 
     /**
      * A Thread Has A Path
@@ -53,7 +49,6 @@ class ThreadTest extends TestCase
         );
     }
 
-
     /**
      * A Thread Has a Creator
      *
@@ -65,7 +60,6 @@ class ThreadTest extends TestCase
         $this->assertInstanceOf(User::class, $this->_thread->creator);
     }
 
-
     /**
      * A Thread Has Replies
      *
@@ -76,7 +70,6 @@ class ThreadTest extends TestCase
     {
         $this->assertInstanceOf(Collection::class, $this->_thread->replies);
     }
-
 
     /**
      * A Thread Can Add A Reply
@@ -93,7 +86,6 @@ class ThreadTest extends TestCase
 
         $this->assertCount(1, $this->_thread->replies);
     }
-
 
     /**
      * A Thread Notifies all Registered Subscribers when a Reply is added
@@ -116,7 +108,6 @@ class ThreadTest extends TestCase
         Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
     }
 
-
     /**
      * A Thread Belongs to a Channel
      *
@@ -129,7 +120,6 @@ class ThreadTest extends TestCase
 
         $this->assertInstanceOf(Channel::class, $thread->channel);
     }
-
 
     /**
      * A Thread Can be Subscribed to
@@ -149,7 +139,6 @@ class ThreadTest extends TestCase
         );
     }
 
-
     /**
      * A Thread can be UnSubscribed from
      *
@@ -166,7 +155,6 @@ class ThreadTest extends TestCase
 
         $this->assertCount(0, $thread->subscriptions);
     }
-
 
     /**
      * It Knows If The Authenticated User Is Subscribed To It
@@ -199,7 +187,7 @@ class ThreadTest extends TestCase
 
         $thread = create(Thread::class);
 
-        tap(auth()->user(), function ($user) use ($thread){
+        tap(auth()->user(), function ($user) use ($thread) {
             $this->assertTrue($thread->hasUpdatesFor($user));
 
             $user->read($thread);
@@ -207,7 +195,7 @@ class ThreadTest extends TestCase
             $this->assertFalse($thread->hasUpdatesFor($user));
         });
     }
-    
+
     /**
      * A Thread Records Each Visit
      *
@@ -230,5 +218,4 @@ class ThreadTest extends TestCase
 //
 //       $this->assertEquals(2, $thread->visits()->count());
 //    }
-
 }
