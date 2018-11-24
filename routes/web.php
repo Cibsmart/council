@@ -35,7 +35,8 @@ Route::get('threads', 'ThreadsController@index')
     ->name('threads.index');
 
 Route::get('threads/create', 'ThreadsController@create')
-    ->name('threads.create');
+    ->name('threads.create')
+    ->middleware('must-be-confirmed');
 
 Route::get('threads/{channel}/{thread}', 'ThreadsController@show')
     ->name('threads.show');
@@ -47,7 +48,8 @@ Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy')
     ->name('threads.delete');
 
 Route::post('threads', 'ThreadsController@store')
-    ->name('threads.store')->middleware('must-be-confirmed');
+    ->name('threads.store')
+    ->middleware('must-be-confirmed');
 
 Route::get('threads/{channel}', 'ThreadsController@index')
     ->name('channel.index');

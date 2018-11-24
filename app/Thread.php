@@ -38,7 +38,7 @@ use Stevebauman\Purify\Facades\Purify;
  */
 class Thread extends Model
 {
-    use RecordActivity, Searchable;
+    use RecordActivity;
 
     protected $guarded = [];
 
