@@ -28,6 +28,11 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
+Run database migration
+```bash
+php artisan migrate
+```
+
 ### Step 3.
 reCAPTCHA is a Google tool to help prevent forum spam. You'll need to create a free account (don't worry, its quick). https://www.google.com/recaptcha/intro/
 
